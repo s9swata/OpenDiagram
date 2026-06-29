@@ -1,7 +1,11 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 interface SkillChipProps {
   label: string;
@@ -132,16 +136,19 @@ function SkillChip({
 }: SkillChipProps) {
   return (
     <div
-      className={`absolute inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-medium text-black shadow-sm ${className}`}
+      data-rotation={rotation}
+      className={`hello-badge absolute rounded-[30px] border-[10px] border-white/50 ${className}`}
       style={{ transform: `rotate(${rotation}deg)` }}
     >
-      <span>{label}</span>
-      <span
-        className="flex h-7 w-7 items-center justify-center rounded-full"
-        style={{ backgroundColor: iconBackground }}
-      >
-        <SkillIcon icon={icon} color={iconColor} />
-      </span>
+      <div className="inline-flex items-center gap-2 rounded-full bg-white/80 px-4 py-2 text-sm font-medium text-black shadow-sm backdrop-blur-sm">
+        <span>{label}</span>
+        <span
+          className="flex h-7 w-7 items-center justify-center rounded-full"
+          style={{ backgroundColor: iconBackground }}
+        >
+          <SkillIcon icon={icon} color={iconColor} />
+        </span>
+      </div>
     </div>
   );
 }
@@ -192,10 +199,74 @@ function WordFade({
 }
 
 export function IntroSection() {
+  const sectionRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      const badges = gsap.utils.toArray<HTMLElement>(".hello-badge");
+
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        badges.forEach((badge) => {
+          gsap.set(badge, {
+            autoAlpha: 1,
+            rotation: Number(badge.dataset.rotation ?? 0),
+            x: 0,
+            y: 0,
+          });
+        });
+        return;
+      }
+
+      const directions = [
+        { x: -560, y: -180, swing: -34 },
+        { x: 520, y: -220, swing: 38 },
+        { x: 600, y: 160, swing: 30 },
+        { x: -520, y: 180, swing: -32 },
+        { x: -340, y: 360, swing: 26 },
+        { x: 360, y: -360, swing: -28 },
+      ];
+
+      const timeline = gsap.timeline({
+        defaults: { ease: "power3.out" },
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top 68%",
+          once: true,
+        },
+      });
+
+      badges.forEach((badge, index) => {
+        const direction = directions[index % directions.length];
+        const finalRotation = Number(badge.dataset.rotation ?? 0);
+
+        gsap.set(badge, {
+          autoAlpha: 0,
+          x: direction.x,
+          y: direction.y,
+          rotation: finalRotation + direction.swing,
+          transformOrigin: "50% -90px",
+        });
+
+        timeline.to(
+          badge,
+          {
+            autoAlpha: 1,
+            x: 0,
+            y: 0,
+            rotation: finalRotation,
+            duration: 1.05,
+          },
+          0.15 + index * 0.055,
+        );
+      });
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <section className="flex w-full flex-col items-center justify-center overflow-hidden px-[120px] max-md:px-6">
+    <section ref={sectionRef} className="flex w-full flex-col items-center justify-center overflow-hidden px-[120px] max-md:px-6">
       <div className="relative flex min-h-screen w-full max-w-[1366px] flex-col items-center justify-center py-20">
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/20 to-transparent" />
         <div className="relative z-10 inline-flex items-center gap-6 rounded-full px-6">
           <span className="h-px w-[69px] bg-black/50" />
           <span className="font-serif text-2xl italic">Hello!</span>

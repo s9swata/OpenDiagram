@@ -41,7 +41,7 @@ export function Footer() {
 
           <div className="inline-flex items-center justify-center gap-2 overflow-visible rounded-[90px] bg-white/30 p-2">
             <a
-              href="https://github.com"
+              href="/import/github"
               className="inline-flex cursor-pointer items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-medium text-black transition-all hover:opacity-90"
             >
               Import From GitHub

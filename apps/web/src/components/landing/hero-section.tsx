@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import gsap from "gsap";
 
 const slideshowImages = [
   "https://framerusercontent.com/images/jSslhcqo8HKNjUvPEceq7bhbY.jpg",
@@ -16,7 +17,7 @@ const heroLogoSvgs = [
   `<svg width="100" height="40" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#a)"><path d="M4.77 4.235C5.03 3.001 6.26 2 7.513 2h6.812L8.66 28.823H1.848c-1.254 0-2.06-1-1.799-2.235L4.77 4.235Zm22.707 0C27.738 3.001 28.967 2 30.22 2h6.812l-5.665 26.823h-6.812c-1.254 0-2.06-1-1.799-2.235l4.721-22.353Zm45.415 0C73.152 3.001 74.38 2 75.635 2h6.812l-5.665 26.823H69.97c-1.254 0-2.059-1-1.798-2.235l4.721-22.353ZM39.303 2h6.812c1.254 0 2.06 1 1.8 2.235l-4.722 22.353c-.26 1.235-1.489 2.235-2.743 2.235h-6.812L39.303 2Zm45.415 0h6.812c1.254 0 2.06 1 1.8 2.235l-4.723 22.353c-.26 1.235-1.488 2.235-2.742 2.235h-6.813L84.718 2ZM50.185 4.235C50.445 3.001 51.673 2 52.927 2h6.813l-5.666 26.823h-6.812c-1.254 0-2.06-1-1.798-2.235l4.72-22.353h.001ZM62.01 2h6.813c1.254 0 2.06 1 1.798 2.235l-7.08 33.53C63.277 38.999 62.05 40 60.795 40h-6.813L62.01 2ZM12.82 19.882h9.082l-1.416 6.706c-.26 1.235-1.49 2.235-2.743 2.235H10.93l1.888-8.94.001-.001Zm31.7 11.177h9.082L51.714 40h-6.812c-1.255 0-2.06-1-1.799-2.235l1.417-6.706Zm24.654 2.079-1.15 5.446c-.05.234-.128.298-.366.298h-.523c-.238 0-.29-.064-.24-.298l1.15-5.446c.05-.233.128-.298.366-.298h.523c.238 0 .29.065.24.298Zm1.512 3.674h-.107c-.114 0-.154.032-.177.145l-.344 1.627c-.05.234-.129.298-.366.298h-.524c-.237 0-.289-.064-.24-.298l1.15-5.446c.05-.233.13-.298.367-.298h1.08c1.244 0 1.715.443 1.485 1.53l-.192.911c-.23 1.088-.888 1.531-2.132 1.531Zm.316-2.699-.3 1.426c-.025.113.001.145.116.145h.172c.4 0 .615-.161.702-.572l.12-.572c.087-.41-.059-.572-.46-.572h-.172c-.114 0-.154.032-.178.145Zm3.738.878.85.935c.446.483.508.773.394 1.313l-.03.145c-.215 1.015-.727 1.579-1.914 1.579-1.186 0-1.479-.475-1.205-1.773l.034-.16c.05-.234.13-.299.366-.299h.556c.238 0 .29.065.24.298l-.075.355c-.068.322.036.451.322.451.287 0 .443-.12.505-.41l.032-.154c.048-.226.022-.338-.224-.604l-.8-.862c-.448-.475-.505-.75-.39-1.29l.036-.176c.215-1.015.727-1.58 1.913-1.58 1.187 0 1.48.476 1.206 1.773l-.034.161c-.05.234-.129.298-.366.298H75.6c-.237 0-.289-.064-.24-.298l.075-.354c.068-.323-.035-.451-.322-.451-.286 0-.443.12-.504.41l-.029.137c-.05.234-.024.347.161.556Zm4.792-1.853c.05-.233.128-.298.366-.298h.523c.238 0 .29.065.24.298l-.856 4.053c-.274 1.297-.767 1.772-1.954 1.772-1.186 0-1.479-.475-1.205-1.773l.856-4.052c.05-.233.13-.298.366-.298h.524c.237 0 .29.065.24.298l-.897 4.246c-.068.322.044.451.355.451.302 0 .477-.129.545-.451l.897-4.246Zm3.406 3.279c.003.065.024.08.065.08.04 0 .07-.015.1-.08l1.413-3.367c.07-.17.151-.21.356-.21h.794c.237 0 .29.065.24.298l-1.15 5.446c-.05.234-.13.298-.367.298h-.376c-.237 0-.29-.064-.24-.298l.552-2.61c.015-.072.002-.089-.047-.089-.033 0-.07.017-.09.073l-1.142 2.659c-.082.193-.187.265-.424.265H82.4c-.246 0-.32-.072-.32-.265l-.028-2.66c-.005-.056-.018-.072-.059-.072-.049 0-.069.017-.084.089l-.55 2.61c-.05.234-.129.298-.367.298h-.376c-.238 0-.29-.064-.24-.298l1.15-5.446c.05-.233.13-.298.366-.298h.68c.286 0 .378.065.376.347l-.01 3.23ZM100 2c0 1.105-.89 2-1.987 2a1.993 1.993 0 0 1-1.987-2c0-1.105.89-2 1.987-2S100 .895 100 2Z" fill="#E3E3E3"/></g><defs><clipPath id="a"><path fill="#fff" d="M0 0h100v40H0z"/></clipPath></defs></svg>`,
 ];
 
-function Slideshow() {
+function Slideshow({ className = "" }: { className?: string }) {
   const [index, setIndex] = useState(0);
 
   useEffect(() => {
@@ -28,7 +29,7 @@ function Slideshow() {
   }, []);
 
   return (
-    <div className="relative inline-flex h-[108px] w-[144px] -rotate-2 overflow-hidden rounded-[36px] border-2 border-black bg-black max-md:h-20 max-md:w-28">
+    <div className={`relative inline-flex h-[108px] w-[144px] -rotate-2 overflow-hidden rounded-[36px] border-2 border-black bg-black max-md:h-20 max-md:w-28 ${className}`}>
       <AnimatePresence mode="wait">
         <motion.img
           key={slideshowImages[index]}
@@ -45,11 +46,11 @@ function Slideshow() {
   );
 }
 
-function Ticker() {
+function Ticker({ className = "" }: { className?: string }) {
   const logoLoop = [...heroLogoSvgs, ...heroLogoSvgs];
 
   return (
-    <div className="relative inline-flex h-[108px] w-[144px] rotate-2 items-center overflow-hidden rounded-[36px] border-2 border-black bg-[#262626] max-md:h-20 max-md:w-28">
+    <div className={`relative inline-flex h-[108px] w-[144px] rotate-2 items-center overflow-hidden rounded-[36px] border-2 border-black bg-[#262626] max-md:h-20 max-md:w-28 ${className}`}>
       <motion.div
         className="absolute flex items-center gap-9 whitespace-nowrap"
         animate={{ x: ["0%", "-50%"] }}
@@ -81,65 +82,75 @@ const avatarImages = [
 ];
 
 export function HeroSection() {
+  const sectionRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        gsap.set([".hero-media-box", ".hero-copy"], { autoAlpha: 1, clearProps: "transform" });
+        return;
+      }
+
+      gsap.set(".hero-media-box", { autoAlpha: 0, y: -34 });
+      gsap.set(".hero-copy", { autoAlpha: 0, y: 18 });
+
+      gsap.timeline({ defaults: { ease: "power3.out" } })
+        .to(".hero-media-box", {
+          autoAlpha: 1,
+          y: 0,
+          duration: 0.72,
+          stagger: 0.08,
+        })
+        .to(".hero-copy", {
+          autoAlpha: 1,
+          y: 0,
+          duration: 0.62,
+          stagger: 0.045,
+        }, "-=0.1");
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <section className="relative flex w-full flex-col items-center justify-center px-[120px] max-md:px-6">
+    <section ref={sectionRef} className="relative flex w-full flex-col items-center justify-center px-[120px] max-md:px-6">
       <div className="flex w-full max-w-[1440px] flex-col items-center gap-12 pb-[118px] pt-[180px] max-md:gap-8 max-md:pb-16 max-md:pt-[120px]">
         <div className="flex w-full max-w-[1000px] flex-col items-center gap-9 max-md:gap-6">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="inline-flex items-center gap-2 rounded-[382px] border border-white bg-white px-4 py-2"
-          >
+          <div className="hero-copy inline-flex items-center gap-2 rounded-[382px] border border-white bg-white px-4 py-2">
             <span
               className="h-[9px] w-[6px] rounded-full"
               style={{ backgroundColor: "rgb(12, 179, 0)" }}
             />
             <span className="text-base">Get Started for free!</span>
-          </motion.div>
+          </div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.2 }}
-            className="flex w-full flex-wrap items-center justify-center gap-3"
-          >
-            <h1 className="text-center text-[78px] font-normal leading-[1.15] -tracking-[0.06em] max-md:text-5xl max-sm:text-4xl">
+          <div className="flex w-full flex-wrap items-center justify-center gap-3">
+            <h1 className="hero-copy text-center text-[78px] font-normal leading-[1.15] -tracking-[0.06em] max-md:text-5xl max-sm:text-4xl">
               Open{" "}
             </h1>
-            <Slideshow />
-            <h1 className="text-center text-[78px] font-normal leading-[1.15] -tracking-[0.06em] max-md:text-5xl max-sm:text-4xl">
+            <Slideshow className="hero-media-box" />
+            <h1 className="hero-copy text-center text-[78px] font-normal leading-[1.15] -tracking-[0.06em] max-md:text-5xl max-sm:text-4xl">
               <span className="text-black/50">Diagram</span>
             </h1>
-            <h1 className="text-center text-[78px] font-normal leading-[1.15] -tracking-[0.06em] max-md:text-5xl max-sm:text-4xl">
+            <h1 className="hero-copy text-center text-[78px] font-normal leading-[1.15] -tracking-[0.06em] max-md:text-5xl max-sm:text-4xl">
               <span className="text-black/50">for Every </span>
             </h1>
-            <Ticker />
-            <h1 className="text-center text-[78px] font-normal leading-[1.15] -tracking-[0.06em] max-md:text-5xl max-sm:text-4xl">
+            <Ticker className="hero-media-box" />
+            <h1 className="hero-copy text-center text-[78px] font-normal leading-[1.15] -tracking-[0.06em] max-md:text-5xl max-sm:text-4xl">
               Open Source Project
             </h1>
-          </motion.div>
+          </div>
 
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            className="max-w-[434px] text-center text-base leading-[1.7]"
-          >
+          <p className="hero-copy max-w-[434px] text-center text-base leading-[1.7]">
             We help open source maintainers generate beautiful, accurate
             documentation — fast and automatically.
-          </motion.p>
+          </p>
         </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.6 }}
-          className="flex items-center gap-4 max-md:flex-col"
-        >
+        <div className="hero-copy flex items-center gap-4 max-md:flex-col">
           <div className="inline-flex items-center gap-6 rounded-[33px] bg-white p-2">
             <a
-              href="https://github.com"
+              href="/import/github"
               className="inline-flex cursor-pointer items-center gap-2 rounded-full bg-black px-6 py-3 text-sm font-medium text-white transition-all hover:opacity-90"
             >
               Import From GitHub
@@ -173,7 +184,7 @@ export function HeroSection() {
             </div>
             <span className="text-xs">Trusted by Maintainers</span>
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

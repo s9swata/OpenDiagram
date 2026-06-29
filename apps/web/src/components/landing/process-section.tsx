@@ -120,7 +120,7 @@ export function ProcessSection() {
           <FirstConnector />
           <SecondConnector />
 
-          <div className="relative z-10 -mr-8 flex w-[36%] flex-col gap-2.5 pt-[62px] max-md:-mr-0 max-md:mb-[-24px] max-md:w-full max-md:pt-0">
+          <div className="relative z-10 -mr-4 flex w-[36%] flex-col gap-2.5 pt-[62px] max-md:-mr-0 max-md:mb-[-24px] max-md:w-full max-md:pt-0">
             <ProcessCard
               number="1"
               title="Connect"
@@ -128,7 +128,7 @@ export function ProcessSection() {
               rotation={-5}
             />
           </div>
-          <div className="relative z-20 -mx-8 flex w-[36%] flex-col gap-2.5 max-md:-mx-0 max-md:mb-[-24px] max-md:w-full max-md:pt-0">
+          <div className="relative z-20 -mx-4 flex w-[36%] flex-col gap-2.5 max-md:-mx-0 max-md:mb-[-24px] max-md:w-full max-md:pt-0">
             <ProcessCard
               number="2"
               title="Analyze"
@@ -136,7 +136,7 @@ export function ProcessSection() {
               rotation={9}
             />
           </div>
-          <div className="relative z-10 -ml-8 flex w-[36%] flex-col gap-2.5 pt-16 max-md:-ml-0 max-md:w-full max-md:pt-0">
+          <div className="relative z-10 -ml-4 flex w-[36%] flex-col gap-2.5 pt-16 max-md:-ml-0 max-md:w-full max-md:pt-0">
             <ProcessCard
               number="3"
               title="Get Your Designs"
