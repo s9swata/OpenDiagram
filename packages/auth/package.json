@@ -1,0 +1,24 @@
+{
+  "name": "@OpenDiagram/auth",
+  "type": "module",
+  "exports": {
+    ".": {
+      "default": "./src/index.ts"
+    },
+    "./*": {
+      "default": "./src/*.ts"
+    }
+  },
+  "scripts": {},
+  "dependencies": {
+    "@OpenDiagram/db": "workspace:*",
+    "@OpenDiagram/env": "workspace:*",
+    "better-auth": "catalog:",
+    "dotenv": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@OpenDiagram/config": "workspace:*",
+    "typescript": "catalog:"
+  }
+}
