@@ -1,32 +1,42 @@
 "use client";
 
 import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 const faqItems = [
   {
-    question: "How does the GitHub integration work?",
+    question: "What type of docs does OpenDiagram generate?",
     answer:
-      "Connect your GitHub account, select a repository, and Open Diagram automatically scans your codebase to generate architecture diagrams, README, API docs, and more.",
+      "The subscription is ongoing and flexible — ideal for continuous design needs. Custom projects are one-time, fixed-scope engagements for larger goals like a rebrand or product launch.",
   },
   {
-    question: "Can I use it with private repositories?",
+    question: "How long does analysis take?",
     answer:
-      "Yes. Open Diagram supports both public and private repositories. Your code is never stored on our servers after analysis.",
+      "Most requests are delivered within 1–2 business days. Larger tasks may take longer, but you’ll always be kept in the loop.",
   },
   {
-    question: "What types of documentation can I generate?",
+    question: "Does it work with private repositories?",
     answer:
-      "Architecture diagrams, README files, API documentation, data flow diagrams, component maps, changelogs, and more.",
+      "As many as you like — with a subscription, you can queue unlimited requests, and they’ll be handled one at a time in priority order.",
   },
   {
-    question: "Is there a free plan available?",
+    question: "What languages and frameworks are supported?",
     answer:
-      "Yes, we offer a free tier with basic features. Premium plans unlock unlimited diagrams, priority support, and advanced customization.",
+      "Websites, product UI, landing pages, brand assets, decks, social media visuals — anything digital that needs to look and feel sharp.",
   },
   {
-    question: "How accurate are the generated diagrams?",
+    question: "Can I customize the output format?",
     answer:
-      "Open Diagram uses advanced AI to understand your codebase structure. Diagrams are highly accurate, and you can always fine-tune them.",
+      "Figma for design, Notion for task management, and Slack or email for async communication.",
+  },
+  {
+    question: "Is there a free tier?",
+    answer: "Yes — you can pause anytime and resume when you’re ready. Unused days roll over.",
+  },
+  {
+    question: "Do you support monorepos?",
+    answer:
+      "Joris focuses on design only, but all deliverables are dev-ready. He can also recommend trusted no-code or Webflow/Framer developers if needed.",
   },
 ];
 
@@ -42,11 +52,13 @@ function AccordionItem({ question, answer, isOpen, onToggle }: AccordionItemProp
     <div className="border-b border-black/10 pb-6">
       <button
         onClick={onToggle}
-        className="flex w-full items-center justify-between py-4 text-left text-lg font-semibold"
+        className="flex w-full items-center justify-between py-4 text-left text-lg font-semibold transition-colors hover:text-black/70"
       >
         {question}
-        <svg
-          className={`h-5 w-5 transition-transform ${isOpen ? "rotate-180" : ""}`}
+        <motion.svg
+          animate={{ rotate: isOpen ? 180 : 0 }}
+          transition={{ duration: 0.3 }}
+          className="h-5 w-5 flex-shrink-0"
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
@@ -55,11 +67,24 @@ function AccordionItem({ question, answer, isOpen, onToggle }: AccordionItemProp
           strokeLinejoin="round"
         >
           <path d="m6 9 6 6 6-6" />
-        </svg>
+        </motion.svg>
       </button>
-      {isOpen && (
-        <p className="text-base leading-[1.7] text-black/70">{answer}</p>
-      )}
+      <AnimatePresence initial={false}>
+        {isOpen && (
+          <motion.div
+            key="content"
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.3, ease: "easeInOut" }}
+            className="overflow-hidden"
+          >
+            <p className="pb-4 text-base leading-[1.7] text-black/70">
+              {answer}
+            </p>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
@@ -69,20 +94,38 @@ export function FaqSection() {
 
   return (
     <section className="flex w-full flex-col items-center justify-center px-[120px] max-md:px-6">
-      <div className="flex w-full max-w-[1440px] flex-col items-center gap-[60px] pb-[160px] pt-[120px]">
+      <div className="flex w-full max-w-[1440px] flex-col items-center gap-[60px] pb-[160px] pt-[120px] max-md:pb-20 max-md:pt-16">
         <div className="flex w-full flex-col items-center gap-2.5 overflow-hidden">
-          <div className="relative z-10 inline-flex items-center gap-6 rounded-full px-6">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+            className="relative z-10 inline-flex items-center gap-6 rounded-full px-6"
+          >
             <span className="h-px w-[69px] bg-black/50" />
             <span className="font-serif text-2xl italic">FAQ</span>
             <span className="h-px w-[69px] bg-black/50" />
-          </div>
-          <h2 className="w-full text-center text-[48px] font-bold leading-[1.4] -tracking-[0.04em] max-md:text-3xl">
+          </motion.div>
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="w-full text-center text-[48px] font-bold leading-[1.4] -tracking-[0.04em] max-md:text-3xl"
+          >
             Your Questions, Answered
-          </h2>
+          </motion.h2>
         </div>
 
         <div className="flex w-full items-start gap-20 max-md:flex-col">
-          <div className="flex w-full max-w-[400px] -rotate-2 flex-col gap-20 rounded-2xl bg-white/50 p-10 max-md:max-w-full">
+          <motion.div
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="flex w-full max-w-[400px] -rotate-2 flex-col gap-20 rounded-2xl bg-white/50 p-10 max-md:max-w-full max-md:-rotate-1"
+          >
             <div className="flex items-center gap-6">
               <img
                 src="https://framerusercontent.com/images/zRVCa2eOgJIf1mJK5PYcBLrYI.png"
@@ -97,7 +140,7 @@ export function FaqSection() {
               <div className="inline-flex w-full items-center gap-6 rounded-[33px] bg-white p-2">
                 <a
                   href="https://discord.gg"
-                  className="inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-black px-6 py-3 text-sm font-medium text-white transition-opacity hover:opacity-90"
+                  className="inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-black px-6 py-3 text-sm font-medium text-white transition-all hover:opacity-90"
                 >
                   Join Our Discord
                   <svg
@@ -117,14 +160,21 @@ export function FaqSection() {
               </div>
               <a
                 href="mailto:hello@opendiagram.dev"
-                className="text-base leading-[1.7] underline underline-offset-2"
+                className="text-base leading-[1.7] underline underline-offset-2 transition-colors hover:text-black/60"
               >
                 Or, email me at hello@opendiagram.dev
               </a>
             </div>
-          </div>
+          </motion.div>
 
-          <div className="flex w-full flex-col gap-9" style={{ paddingTop: "36px" }}>
+          <motion.div
+            initial={{ opacity: 0, x: 30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="flex w-full flex-col gap-9"
+            style={{ paddingTop: "36px" }}
+          >
             {faqItems.map((item, i) => (
               <AccordionItem
                 key={i}
@@ -134,7 +184,7 @@ export function FaqSection() {
                 onToggle={() => setOpenIndex(openIndex === i ? null : i)}
               />
             ))}
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>

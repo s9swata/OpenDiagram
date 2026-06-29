@@ -19,6 +19,7 @@
     "clsx": "^2.1.1",
     "dotenv": "catalog:",
     "evlog": "catalog:",
+    "framer-motion": "^12.42.0",
     "lucide-react": "catalog:",
     "next": "^16.2.0",
     "next-themes": "catalog:",
