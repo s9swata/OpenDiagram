@@ -218,9 +218,10 @@ Never use neon outer glows. Never use heavy drop shadows that make surfaces feel
 
 ## Shapes
 
-OpenDiagram is pill-forward and soft, but not childish.
+OpenDiagram is softly rounded and tactile, but not childish.
 
-- Small controls: rounded pill, 999px radius.
+- Buttons: rounded pill, 999px radius.
+- Small controls: rounded pill, 999px radius when circular or input-like.
 - Dropdown/menu cards: rounded-md, 8px radius.
 - Content cards: rounded-2xl, 16px radius.
 - Footer slab: 24px radius.

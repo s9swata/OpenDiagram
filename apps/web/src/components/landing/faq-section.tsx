@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { ButtonShaderTexture } from "@/components/button-shader-texture";
 
 const faqItems = [
   {
@@ -79,9 +80,7 @@ function AccordionItem({ question, answer, isOpen, onToggle }: AccordionItemProp
             transition={{ duration: 0.3, ease: "easeInOut" }}
             className="overflow-hidden"
           >
-            <p className="pb-4 text-base leading-[1.7] text-black/70">
-              {answer}
-            </p>
+            <p className="pb-4 text-base leading-[1.7] text-black/70">{answer}</p>
           </motion.div>
         )}
       </AnimatePresence>
@@ -120,11 +119,11 @@ export function FaqSection() {
 
         <div className="flex w-full items-start gap-20 max-md:flex-col">
           <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, x: -30, rotate: -8 }}
+            whileInView={{ opacity: 1, x: 0, rotate: -2 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="flex w-full max-w-[400px] -rotate-2 flex-col gap-20 rounded-2xl bg-white/50 p-10 max-md:max-w-full max-md:-rotate-1"
+            transition={{ duration: 0.7, ease: "easeOut" }}
+            className="flex w-full max-w-[400px] origin-center flex-col gap-20 rounded-2xl bg-white/50 p-10 max-md:max-w-full"
           >
             <div className="flex items-center gap-6">
               <img
@@ -133,16 +132,17 @@ export function FaqSection() {
                 className="h-20 w-20 rounded-full"
               />
               <h3 className="text-2xl font-bold leading-[1.6] -tracking-[0.02em]">
-                Have more questions? Talk to us on Discord
+                Have more questions? Checkout our GitHub
               </h3>
             </div>
             <div className="flex w-full flex-col items-center gap-6">
               <div className="inline-flex w-full items-center gap-6 rounded-[33px] bg-white p-2">
                 <a
-                  href="https://discord.gg"
-                  className="inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-black px-6 py-3 text-sm font-medium text-white transition-all hover:opacity-90"
+                  href="https://github.com/Itz-Agasta/OpenDiagram"
+                  className="relative isolate inline-flex w-full cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-full bg-black px-6 py-3 text-sm font-medium text-white transition-all hover:opacity-90"
                 >
-                  Join Our Discord
+                  <ButtonShaderTexture />
+                  Raise an issue
                   <svg
                     width="16"
                     height="16"

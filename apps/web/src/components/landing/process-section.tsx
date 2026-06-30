@@ -16,9 +16,7 @@ function ProcessCard({ number, title, description, rotation }: ProcessCardProps)
       style={{ transform: `rotate(${rotation}deg)` }}
     >
       <div className="flex w-full flex-col gap-6 rounded-[20px] bg-white/80 p-8 shadow-sm backdrop-blur-sm">
-        <span className="text-[72px] font-thin leading-[1.25] -tracking-[0.06em]">
-          {number}
-        </span>
+        <span className="text-[72px] font-thin leading-[1.25] -tracking-[0.06em]">{number}</span>
         <h3 className="text-2xl font-bold leading-[1.6] -tracking-[0.02em]">{title}</h3>
         <p className="text-base leading-[1.7] text-black/70">{description}</p>
       </div>
@@ -153,7 +151,7 @@ export function ProcessSection() {
             name="Sophie Lemaire"
             role="Product Lead at Loomi"
           />
-          <span className="h-full w-px bg-black/25 max-md:hidden" />
+          <span className="w-px self-stretch bg-black/25 max-md:hidden" />
           <Testimony
             paddingTop="240px"
             quote="We had zero documentation. Open Diagram scanned our repo and generated everything — diagrams, API docs, README. It actually understood our codebase."
@@ -161,6 +159,7 @@ export function ProcessSection() {
             role="Founder of Drifted Studio"
           />
         </div>
+
       </div>
     </section>
   );
