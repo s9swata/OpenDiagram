@@ -155,7 +155,10 @@ const FOOTER_TEXTURE_UNIFORMS = JSON.stringify({
 export function FooterTextureBackground() {
   return (
     <div className="pointer-events-none absolute inset-0 z-[1] overflow-hidden opacity-15 mix-blend-screen">
-      <Script src="https://unpkg.com/media-shader@latest/media-shader.js" strategy="afterInteractive" />
+      <Script
+        src="https://unpkg.com/media-shader@latest/media-shader.js"
+        strategy="afterInteractive"
+      />
       {createElement("media-shader", {
         className: "block h-full w-full",
         width: "100%",

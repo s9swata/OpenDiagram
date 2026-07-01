@@ -51,3 +51,11 @@ check:
 # Typecheck all packages with tsgo
 types:
     bun run check-types
+
+# Start web dev server
+web:
+    bun run dev:web
+
+# Start API server
+server:
+    bun run dev:server

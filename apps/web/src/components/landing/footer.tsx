@@ -1,4 +1,5 @@
-import { FooterTextureBackground } from "./footer-texture-background";
+import Link from "next/link";
+import { FooterGodRaysBackground } from "./footer-god-rays-background";
 
 function FooterBackground() {
   return <div className="pointer-events-none absolute inset-0 z-0 bg-zinc-950" />;
@@ -17,7 +18,7 @@ export function Footer() {
           backgroundSize: "200px",
         }}
       />
-      <FooterTextureBackground />
+      <FooterGodRaysBackground />
 
       <div className="relative z-10 flex min-h-[560px] w-full max-w-[1366px] flex-col items-start justify-end gap-9 py-20">
         <div className="flex w-full flex-1 flex-col items-center justify-center gap-9 rounded-2xl px-9 py-[60px] text-center max-md:px-0">
@@ -30,17 +31,18 @@ export function Footer() {
           </div>
 
           <h2 className="w-full text-center text-[78px] font-normal leading-[1.15] -tracking-[0.06em] text-white max-md:text-5xl max-sm:text-4xl">
-            Your Repo, Fully Documented
+            Your Repo, <span className="text-white/70">Fully Documented</span>
           </h2>
 
           <div className="flex w-full max-w-[620px] flex-col items-center justify-center gap-2.5 overflow-hidden">
-            <p className="text-center text-2xl font-normal leading-[1.6] -tracking-[0.02em] text-white/80 max-md:text-xl">
-              Connect your GitHub and get architecture diagrams, API docs, and a full README generated in seconds.
+            <p className="text-center text-xl font-normal leading-[1.6] -tracking-[0.02em] text-white/80 max-md:text-xl">
+              Connect your GitHub and get architecture diagrams, API docs, and a full README
+              generated in seconds.
             </p>
           </div>
 
           <div className="inline-flex items-center justify-center gap-2 overflow-visible rounded-[90px] bg-white/30 p-2">
-            <a
+            <Link
               href="/import/github"
               className="inline-flex cursor-pointer items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-medium text-black transition-all hover:opacity-90"
             >
@@ -58,7 +60,7 @@ export function Footer() {
                 <path d="M5 12h14" />
                 <path d="m12 5 7 7-7 7" />
               </svg>
-            </a>
+            </Link>
           </div>
         </div>
 
@@ -67,10 +69,16 @@ export function Footer() {
             <span className="text-base leading-[1.7] text-white">© Team Vyse, 2026</span>
           </div>
           <div className="flex flex-1 items-center justify-end gap-9 text-base leading-[1.7] text-white max-md:justify-start">
-            <a href="https://github.com" className="transition-colors hover:text-white/70">
+            <a
+              href="https://github.com/s9swata/OpenDiagram"
+              className="transition-colors hover:text-white/70"
+            >
               GitHub
             </a>
-            <a href="mailto:hello@opendiagram.dev" className="transition-colors hover:text-white/70">
+            <a
+              href="mailto:hello@opendiagram.dev"
+              className="transition-colors hover:text-white/70"
+            >
               Contact
             </a>
           </div>

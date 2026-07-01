@@ -3,13 +3,8 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { GithubLogoIcon } from "@phosphor-icons/react";
-import {
-  ArrowLeft,
-  Check,
-  GitBranch,
-  Loader2,
-  Search,
-} from "lucide-react";
+import { ArrowLeft, Check, GitBranch, Loader2, Search } from "lucide-react";
+import { ButtonShaderTexture } from "@/components/button-shader-texture";
 
 type Step = "connect" | "redirecting" | "picker" | "importing" | "done";
 
@@ -54,8 +49,9 @@ export default function GitHubImportPage() {
           </Link>
           <Link
             href="/dashboard"
-            className="rounded-full bg-od-ink px-4 py-2 text-[14px] text-od-on-dark transition hover:bg-[#2a2a2a]"
+            className="relative isolate overflow-hidden rounded-full bg-od-ink px-4 py-2 text-[14px] text-od-on-dark transition hover:bg-[#2a2a2a]"
           >
+            <ButtonShaderTexture />
             Open dashboard
           </Link>
         </header>
@@ -74,7 +70,8 @@ export default function GitHubImportPage() {
                   Bring your repo into OpenDiagram.
                 </h1>
                 <p className="max-w-[430px] text-[16px] leading-[1.7] text-white/70">
-                  Connect GitHub, choose a repository, and start generating architecture diagrams from real project structure.
+                  Connect GitHub, choose a repository, and start generating architecture diagrams
+                  from real project structure.
                 </p>
               </div>
             </div>
@@ -114,28 +111,29 @@ function ConnectPanel({ onConnect }: { onConnect: () => void }) {
   return (
     <div className="flex w-full max-w-[520px] flex-col gap-6 rounded-[24px] border border-[#d9d9d9] bg-white p-6 md:p-8">
       <div className="flex flex-col gap-3">
-        <p className="text-[13px] uppercase tracking-[0.18em] text-od-ink-faint">
-          Step 1
-        </p>
+        <p className="text-[13px] uppercase tracking-[0.18em] text-od-ink-faint">Step 1</p>
         <h2 className="text-[32px] font-normal leading-[1.1] -tracking-[0.04em]">
           Continue with GitHub
         </h2>
         <p className="text-[15px] leading-[1.7] text-od-ink-muted">
-          This UI is ready for OAuth. For now, clicking continue simulates returning from GitHub so you can review the import experience.
+          This UI is ready for OAuth. For now, clicking continue simulates returning from GitHub so
+          you can review the import experience.
         </p>
       </div>
 
       <button
         type="button"
         onClick={onConnect}
-        className="inline-flex items-center justify-center gap-2 rounded-full bg-od-ink px-5 py-3 text-[14px] text-od-on-dark transition hover:bg-[#2a2a2a]"
+        className="relative isolate inline-flex items-center justify-center gap-2 overflow-hidden rounded-full bg-od-ink px-5 py-3 text-[14px] text-od-on-dark transition hover:bg-[#2a2a2a]"
       >
+        <ButtonShaderTexture />
         <GithubLogoIcon size={16} weight="regular" />
         Continue with GitHub
       </button>
 
       <div className="rounded-[16px] border border-[#d9d9d9] bg-od-surface p-4 text-[13px] leading-[1.7] text-od-ink-muted">
-        When OAuth is connected, repositories returned by GitHub will appear in the picker. No repository data is fabricated here.
+        When OAuth is connected, repositories returned by GitHub will appear in the picker. No
+        repository data is fabricated here.
       </div>
     </div>
   );
@@ -167,20 +165,24 @@ function RepositoryPicker({
   return (
     <div className="flex w-full max-w-[680px] flex-col gap-5">
       <div className="flex flex-col gap-2">
-        <p className="text-[13px] uppercase tracking-[0.18em] text-od-ink-faint">
-          Step 2
-        </p>
+        <p className="text-[13px] uppercase tracking-[0.18em] text-od-ink-faint">Step 2</p>
         <h2 className="text-[34px] font-normal leading-[1.1] -tracking-[0.04em]">
           Select a repository
         </h2>
         <p className="text-[15px] leading-[1.7] text-od-ink-muted">
-          Real repositories will populate this table after GitHub OAuth and repository permissions are wired.
+          Real repositories will populate this table after GitHub OAuth and repository permissions
+          are wired.
         </p>
       </div>
 
-      <div className="flex h-12 items-center gap-2 rounded-full border border-[#d9d9d9] bg-white px-4">
-        <Search className="h-4 w-4 text-od-ink-faint" />
+      <div className="flex h-12 items-center gap-2 rounded-full border border-[#d9d9d9] bg-white px-4 focus-within:ring-2 focus-within:ring-od-ink focus-within:ring-offset-2">
+        <Search className="h-4 w-4 text-od-ink-faint" aria-hidden="true" />
+        <label htmlFor="github-repository-search" className="sr-only">
+          Search repositories
+        </label>
         <input
+          id="github-repository-search"
+          type="search"
           value={query}
           onChange={(event) => onQueryChange(event.target.value)}
           placeholder="Search repositories after connecting GitHub"
@@ -225,7 +227,10 @@ function ImportingPanel() {
       </div>
       <div className="flex flex-col gap-3">
         {progressSteps.map((item) => (
-          <div key={item} className="flex items-center gap-3 rounded-[14px] border border-[#d9d9d9] p-3 text-[14px] text-od-ink-muted">
+          <div
+            key={item}
+            className="flex items-center gap-3 rounded-[14px] border border-[#d9d9d9] p-3 text-[14px] text-od-ink-muted"
+          >
             <span className="h-2 w-2 rounded-full bg-od-green" />
             {item}
           </div>
@@ -249,8 +254,9 @@ function DonePanel() {
       </div>
       <Link
         href="/dashboard"
-        className="rounded-full bg-od-ink px-5 py-3 text-[14px] text-od-on-dark transition hover:bg-[#2a2a2a]"
+        className="relative isolate overflow-hidden rounded-full bg-od-ink px-5 py-3 text-[14px] text-od-on-dark transition hover:bg-[#2a2a2a]"
       >
+        <ButtonShaderTexture />
         Go to dashboard
       </Link>
     </div>

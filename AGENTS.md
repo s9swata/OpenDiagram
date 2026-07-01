@@ -78,11 +78,12 @@ just reinstall         # clean + bun install
 
 ## Rules
 
-- Never commit `.env` files.
 - Never modify files in `node_modules/`, `.turbo/`, or `.next/`.
-- Run `just check` before committing.
+- Read docs and get latest context about libraries before coding.
+- Run `just check` & `just types` after finishing a coding session & fix those.
 - Keep changes surgical — don't refactor adjacent code.
 - New dependencies: justify additions, prefer workspace catalog.
+- Always use `bun add` to add packages.
 
 ## AI Coding Guidelines
 
@@ -98,34 +99,32 @@ Before implementing:
 - If something is unclear, stop. Name what's confusing. Ask.
 - Never guess APIs, method signatures, types, or behavior. Verify first.
   1. **context7 MCP** — for well-known libraries (React, Next.js, Hono, etc.)
-  2. **Web search** — for obscure packages, platform APIs, blog posts, GitHub issues
+  2. **Exa MCP** (`exa:search` / `exa:web_fetch_exa`) — for obscure packages, platform APIs, blog posts, JS-rendered docs, or specific URLs
   3. **Ask the user** — if neither source gives a definitive answer
 
 ### Token Efficiency
 
 Always use the **caveman skill** (`/caveman`) at the start of every conversations to save context tokens.
 
-### Available Skills
-
-Use these as needed — they encode project-specific knowledge.
+### Available Skills/MCPs
 
 | Skill                               | When to use                                                   |
 | ----------------------------------- | ------------------------------------------------------------- |
-| `/hono`                             | Building Hono routes, middleware, validation, streaming       |
+| `/hono`                             | Hono routes, middleware, validation, streaming                |
 | `/shadcn`                           | Adding/fixing/composing shadcn components                     |
 | `/better-auth-best-practices`       | Auth setup, sessions, plugins, OAuth config                   |
 | `/supabase-postgres-best-practices` | Postgres queries, schema design, optimization                 |
 | `/vercel-react-best-practices`      | React/Next.js performance, data fetching, bundle optimization |
 | `/vercel-composition-patterns`      | React component composition that scales                       |
 | `/turborepo`                        | Monorepo task orchestration, pipeline config                  |
-| `/web-design-guidelines`            | UI review for accessibility, UX best practices                |
-| `/review-logging-patterns`          | Audit code for evlog adoption, detect console.log spam        |
+| `/web-design-guidelines`            | UI review, accessibility, UX best practices                   |
+| `/review-logging-patterns`          | Audit evlog adoption, detect console.log spam                 |
 | `/analyze-logs`                     | Debug from `.evlog/logs/` structured NDJSON events            |
 | `/caveman`                          | Compress output ~75% for long sessions                        |
-| `/research`                         | Multi-source web research with citations                      |
-| `/search`                           | Quick web search via Tavily                                   |
-| `/crawl`                            | Download docs/sites as local markdown                         |
-| `/extract`                          | Extract clean content from specific URLs                      |
+
+- Use **Exa MCP** (`exa:search` / `exa:web_fetch_exa`) for web research and reading docs.
+- Use **Chrome DevTools MCP** (`/chrome-devtools-mcp:chrome-devtools`) to interact with the live app for testing and verification.
+- Use **GitHub MCP** for all GitHub-related tasks. Fall back to `gh cli` if more efficient.
 
 ### Simplicity First
 
