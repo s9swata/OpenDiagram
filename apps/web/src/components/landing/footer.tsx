@@ -31,7 +31,7 @@ export function Footer() {
           </div>
 
           <h2 className="w-full text-center text-[78px] font-normal leading-[1.15] -tracking-[0.06em] text-white max-md:text-5xl max-sm:text-4xl">
-            Your Repo, <span className="text-black/70" >Fully Documented</span>
+            Your Repo, <span className="text-white/70">Fully Documented</span>
           </h2>
 
           <div className="flex w-full max-w-[620px] flex-col items-center justify-center gap-2.5 overflow-hidden">

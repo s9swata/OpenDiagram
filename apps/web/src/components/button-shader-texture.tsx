@@ -1,7 +1,7 @@
 "use client";
 
 import { createElement } from "react";
-import Script from "next/script";
+import { MediaShaderScript } from "./media-shader-script";
 
 const BUTTON_GRAIN_FRAGMENT_SHADER = `#version 300 es
 precision highp float;
@@ -86,8 +86,11 @@ const BUTTON_GRAIN_UNIFORMS = JSON.stringify({
 
 export function ButtonShaderTexture() {
   return (
-    <span aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden rounded-[inherit] opacity-35">
-      <Script src="https://unpkg.com/media-shader@1.1.6/media-shader.js" strategy="afterInteractive" />
+    <span
+      aria-hidden="true"
+      className="pointer-events-none absolute inset-0 overflow-hidden rounded-[inherit] opacity-35"
+    >
+      <MediaShaderScript />
       {createElement("media-shader", {
         className: "block h-full w-full",
         width: "1024px",

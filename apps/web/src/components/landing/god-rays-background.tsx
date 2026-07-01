@@ -1,7 +1,7 @@
 "use client";
 
 import { createElement } from "react";
-import Script from "next/script";
+import { MediaShaderScript } from "../media-shader-script";
 
 const GOD_RAYS_FRAGMENT_SHADER = `#version 300 es
 precision highp float;
@@ -70,10 +70,7 @@ export function GodRaysBackground() {
       aria-hidden="true"
       className="pointer-events-none fixed inset-0 z-[1] overflow-hidden opacity-60 mix-blend-screen"
     >
-      <Script
-        src="https://unpkg.com/media-shader@1.1.6/media-shader.js"
-        strategy="afterInteractive"
-      />
+      <MediaShaderScript />
       {createElement("media-shader", {
         className: "block h-full w-full",
         width: "100%",

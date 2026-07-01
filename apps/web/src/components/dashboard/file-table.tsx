@@ -70,10 +70,10 @@ export function FileTable({ files }: { files: DiagramFile[] }) {
 
 function FileRow({ file }: { file: DiagramFile }) {
   return (
-    <tr className="group rounded-[12px] bg-od-surface-elevated transition hover:bg-white">
+    <tr className="group">
       <th
         scope="row"
-        className="rounded-l-[12px] border-y border-l border-od-border-soft px-3 py-2.5 text-left font-normal backdrop-blur-sm"
+        className="rounded-l-[12px] border-y border-l border-od-border-soft bg-od-surface-elevated px-3 py-2.5 text-left font-normal backdrop-blur-sm transition-colors group-hover:bg-white"
       >
         <div className="flex min-w-0 items-center gap-3">
           <div className="h-10 w-[72px] shrink-0 overflow-hidden rounded-[8px] border border-od-border-soft">
@@ -95,18 +95,18 @@ function FileRow({ file }: { file: DiagramFile }) {
           </div>
         </div>
       </th>
-      <td className="border-y border-od-border-soft px-3 py-2.5 text-[13px] text-od-ink-faint backdrop-blur-sm">
+      <td className="border-y border-od-border-soft bg-od-surface-elevated px-3 py-2.5 text-[13px] text-od-ink-faint backdrop-blur-sm transition-colors group-hover:bg-white">
         <span className="block truncate">{file.folder}</span>
       </td>
-      <td className="border-y border-od-border-soft px-3 py-2.5 text-center text-[13px] text-od-ink-faint backdrop-blur-sm">
+      <td className="border-y border-od-border-soft bg-od-surface-elevated px-3 py-2.5 text-center text-[13px] text-od-ink-faint backdrop-blur-sm transition-colors group-hover:bg-white">
         <span className="block truncate">{file.edited}</span>
       </td>
-      <td className="border-y border-od-border-soft px-3 py-2.5 backdrop-blur-sm">
+      <td className="border-y border-od-border-soft bg-od-surface-elevated px-3 py-2.5 backdrop-blur-sm transition-colors group-hover:bg-white">
         <div className="flex justify-center">
           <Avatars people={file.collaborators} />
         </div>
       </td>
-      <td className="rounded-r-[12px] border-y border-r border-od-border-soft px-3 py-2.5 backdrop-blur-sm">
+      <td className="rounded-r-[12px] border-y border-r border-od-border-soft bg-od-surface-elevated px-3 py-2.5 backdrop-blur-sm transition-colors group-hover:bg-white">
         <div className="flex justify-end">
           <Star
             aria-hidden="true"

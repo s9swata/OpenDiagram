@@ -81,13 +81,13 @@ export function LandingPage() {
         <div className="relative z-10">
           <HeroSection />
           <PortfolioSection />
-          <div id="about">
+          <div id="about" className="scroll-mt-20">
             <IntroSection />
           </div>
-          <div id="how-it-works">
+          <div id="how-it-works" className="scroll-mt-20">
             <ProcessSection />
           </div>
-          <div id="faq">
+          <div id="faq" className="scroll-mt-20">
             <FaqSection />
           </div>
           <Footer />

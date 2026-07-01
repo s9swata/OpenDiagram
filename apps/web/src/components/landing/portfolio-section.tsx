@@ -18,14 +18,18 @@ const caseStudyImages = [
   "https://framerusercontent.com/images/670uUrkwoRnzhCl9b3kEMwUmgE4.jpg",
 ];
 
+const TICKER_IMAGE_HEIGHT = 200;
+const TICKER_GAP = 48;
+
 function VerticalTicker({ images, speed }: { images: string[]; speed: number }) {
   const loopImages = [...images, ...images];
+  const tickerTravel = images.length * (TICKER_IMAGE_HEIGHT + TICKER_GAP);
 
   return (
     <div className="relative flex h-full w-full flex-col overflow-hidden">
       <motion.div
         className="flex flex-col gap-12"
-        animate={{ y: ["0%", "-50%"] }}
+        animate={{ y: [0, -tickerTravel] }}
         transition={{
           duration: speed,
           repeat: Infinity,
@@ -70,7 +74,7 @@ export function PortfolioSection() {
 
         <div className="absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2">
           <motion.a
-            href="/"
+            href="/dashboard"
             aria-label="Create a new diagram"
             className="flex h-32 w-32 items-center justify-center rounded-full bg-white/10 backdrop-blur-md transition-colors hover:bg-white/20"
             whileHover={{ scale: 1.1 }}
@@ -95,7 +99,7 @@ export function PortfolioSection() {
         </div>
 
         <a
-          href="/"
+          href="/dashboard"
           className="absolute bottom-8 left-1/2 z-10 -translate-x-1/2 text-center text-sm text-white/70"
         >
           <span className="font-serif italic">See Recent Work</span>
