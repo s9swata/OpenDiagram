@@ -147,16 +147,16 @@ export function ProcessSection() {
         <div className="flex w-full items-start gap-24 pt-12 max-md:flex-col max-md:gap-12">
           <Testimony
             paddingTop="80px"
-            quote="OpenDiagram turned a messy architecture conversation into a Vibe Diagram our whole team understood in minutes."
-            name="Sophie Lemaire"
-            role="Product Lead at Loomi"
+            quote="Designing complex systems has never been this intuitive. OpenDiagram lets us go from a simple prompt to a production-ready workspace architecture in seconds."
+            name="Saswata"
+            role="Co-Founder & Developer"
           />
           <span className="w-px self-stretch bg-black/25 max-md:hidden" />
           <Testimony
             paddingTop="240px"
-            quote="We pasted a repo, asked for the system flow, and got a diagram we could immediately tweak with the agent."
-            name="Milan Bakker"
-            role="Founder of Drifted Studio"
+            quote="Connecting a repository and instantly generating comprehensive architecture flows saved us countless hours of manual whiteboarding."
+            name="Rupam"
+            role="Co-Founder & Architect"
           />
         </div>
       </div>

@@ -52,6 +52,7 @@ export function WorkspaceAgentSidebar({
         </button>
       </div>
       <AIChatPanel
+        activeFileType={activeFileType}
         excalidrawAPI={activeFileType === "doc" ? null : excalidrawAPI}
         projectId={projectId}
         fileId={fileId}

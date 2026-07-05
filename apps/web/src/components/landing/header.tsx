@@ -18,8 +18,9 @@ export function Header() {
       <div className="relative z-20 mx-auto flex h-20 w-full max-w-[1440px] items-center justify-between">
         <Link
           href="/"
-          className="inline-flex h-11 items-center justify-center overflow-hidden rounded-[22px] bg-white px-6 text-base font-bold"
+          className="inline-flex h-11 items-center justify-center gap-2 overflow-hidden rounded-[22px] bg-white px-4 text-base font-bold"
         >
+          <img src="/logo_opendiagram.png" alt="" className="h-6 w-6 shrink-0 object-contain" />
           OpenDiagram
         </Link>
         <button

@@ -11,6 +11,7 @@ export type WorkspaceSidebarFile = {
 type WorkspaceLayoutStore = {
   sidebarWidth: number;
   agentWidth: number;
+  isSidebarOpen: boolean;
   isAgentOpen: boolean;
   projectId: string | null;
   projectName: string;
@@ -18,6 +19,9 @@ type WorkspaceLayoutStore = {
   activeFileId: string | null;
   setSidebarWidth: (width: number) => void;
   setAgentWidth: (width: number) => void;
+  openSidebar: () => void;
+  closeSidebar: () => void;
+  toggleSidebar: () => void;
   openAgent: () => void;
   closeAgent: () => void;
   toggleAgent: () => void;
@@ -37,6 +41,7 @@ export const useWorkspaceLayoutStore = create<WorkspaceLayoutStore>()(
     (set) => ({
       sidebarWidth: 280,
       agentWidth: 384,
+      isSidebarOpen: false,
       isAgentOpen: true,
       projectId: null,
       projectName: "OpenDiagram",
@@ -44,6 +49,9 @@ export const useWorkspaceLayoutStore = create<WorkspaceLayoutStore>()(
       activeFileId: null,
       setSidebarWidth: (width) => set({ sidebarWidth: width }),
       setAgentWidth: (width) => set({ agentWidth: width }),
+      openSidebar: () => set({ isSidebarOpen: true }),
+      closeSidebar: () => set({ isSidebarOpen: false }),
+      toggleSidebar: () => set((state) => ({ isSidebarOpen: !state.isSidebarOpen })),
       openAgent: () => set({ isAgentOpen: true }),
       closeAgent: () => set({ isAgentOpen: false }),
       toggleAgent: () => set((state) => ({ isAgentOpen: !state.isAgentOpen })),
@@ -83,6 +91,7 @@ export const useWorkspaceLayoutStore = create<WorkspaceLayoutStore>()(
       partialize: (state) => ({
         sidebarWidth: state.sidebarWidth,
         agentWidth: state.agentWidth,
+        isSidebarOpen: state.isSidebarOpen,
         isAgentOpen: state.isAgentOpen,
       }),
     },

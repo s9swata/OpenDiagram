@@ -111,6 +111,7 @@ export function useWorkspaceLayoutController() {
 
   const sidebarWidth = useWorkspaceLayoutStore((state) => state.sidebarWidth);
   const agentWidth = useWorkspaceLayoutStore((state) => state.agentWidth);
+  const isSidebarOpen = useWorkspaceLayoutStore((state) => state.isSidebarOpen);
   const isAgentOpen = useWorkspaceLayoutStore((state) => state.isAgentOpen);
   const storedProjectId = useWorkspaceLayoutStore((state) => state.projectId);
   const projectName = useWorkspaceLayoutStore((state) => state.projectName);
@@ -118,6 +119,8 @@ export function useWorkspaceLayoutController() {
   const activeFileId = useWorkspaceLayoutStore((state) => state.activeFileId);
   const setSidebarWidth = useWorkspaceLayoutStore((state) => state.setSidebarWidth);
   const setAgentWidth = useWorkspaceLayoutStore((state) => state.setAgentWidth);
+  const openSidebar = useWorkspaceLayoutStore((state) => state.openSidebar);
+  const closeSidebar = useWorkspaceLayoutStore((state) => state.closeSidebar);
   const openAgent = useWorkspaceLayoutStore((state) => state.openAgent);
   const closeAgent = useWorkspaceLayoutStore((state) => state.closeAgent);
   const setProjectSnapshot = useWorkspaceLayoutStore((state) => state.setProjectSnapshot);
@@ -148,21 +151,41 @@ export function useWorkspaceLayoutController() {
         ? nextDraft.files.find((f) => f.id === params.workspaceId)
         : nextDraft.files[0];
       currentFileIdRef.current = file?.id ?? nextDraft.files[0]?.id ?? null;
-      setActiveFile(null);
+      const fileType = file?.type ?? "diagram";
+      const now = new Date().toISOString();
+      setActiveFile(
+        file
+          ? {
+              id: file.id,
+              projectId: nextDraft.id,
+              type: fileType,
+              name: file.name,
+              scene: file.scene,
+              spec: file.spec,
+              content: file.content,
+              history: file.history ?? [],
+              createdAt: now,
+              updatedAt: now,
+            }
+          : null,
+      );
       setProjectSnapshot({
         projectId: nextDraft.id,
         projectName: nextDraft.name,
         files: nextDraft.files.map((draftFile) => ({
           id: draftFile.id,
           name: draftFile.name,
-          type: "diagram",
+          type: draftFile.type ?? "diagram",
         })),
         activeFileId: currentFileIdRef.current,
       });
-      setDocContent("");
-      contentRef.current = "";
-      setInitialScene(file?.scene ?? null);
-      lastSavedVersionRef.current = initialElementsVersion(file?.scene);
+      const content = fileType === "doc" ? fileContentToText(file?.content) : "";
+      setDocContent(content);
+      contentRef.current = content;
+      setInitialScene(fileType === "diagram" ? (file?.scene ?? null) : null);
+      lastSavedVersionRef.current = initialElementsVersion(
+        fileType === "diagram" ? file?.scene : null,
+      );
     } else {
       currentFileIdRef.current = null;
       setInitialScene(null);
@@ -293,9 +316,11 @@ export function useWorkspaceLayoutController() {
       for (const draftFile of currentDraft.files) {
         const file = await createProjectFile(project.id, {
           name: draftFile.name,
-          type: "diagram",
-          scene: draftFile.scene,
+          type: draftFile.type ?? "diagram",
+          scene: (draftFile.type ?? "diagram") === "diagram" ? draftFile.scene : undefined,
           spec: draftFile.spec,
+          content: draftFile.type === "doc" ? draftFile.content : undefined,
+          history: draftFile.history,
         });
         files.push({ draftId: draftFile.id, file });
       }
@@ -785,6 +810,7 @@ export function useWorkspaceLayoutController() {
       firstFileName,
       initialScene,
       isAgentOpen,
+      isSidebarOpen,
       isEditingName,
       isSignedIn,
       leavePromptOpen,
@@ -815,7 +841,9 @@ export function useWorkspaceLayoutController() {
       handleResizeStart,
       handleSceneChange,
       leaveWithoutSaving,
+      closeSidebar,
       openAgent,
+      openSidebar,
       openWorkspaceFile,
       saveActiveFile,
       setFirstFileName,

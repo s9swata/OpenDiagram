@@ -1,6 +1,5 @@
 import { Header } from "./header";
 import { HeroSection } from "./hero-section";
-import { PortfolioSection } from "./portfolio-section";
 import { IntroSection } from "./intro-section";
 import { ProcessSection } from "./process-section";
 import { FaqSection } from "./faq-section";
@@ -80,7 +79,6 @@ export function LandingPage() {
 
         <div className="relative z-10">
           <HeroSection />
-          <PortfolioSection />
           <div id="about" className="scroll-mt-20">
             <IntroSection />
           </div>

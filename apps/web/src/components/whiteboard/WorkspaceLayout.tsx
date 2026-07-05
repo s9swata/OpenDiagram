@@ -17,19 +17,22 @@ export function WorkspaceLayout() {
 
   return (
     <div className="flex h-full w-full overflow-hidden bg-od-surface text-od-ink">
-      <WorkspaceSidebar
-        accountImage={state.accountImage}
-        accountName={state.accountName}
-        activeFileId={state.activeFileId}
-        files={state.sidebarFilesForProject}
-        isSignedIn={state.isSignedIn}
-        onOpenFile={actions.openWorkspaceFile}
-        onResizeStart={actions.handleResizeStart}
-        onSignIn={actions.signInToSave}
-        onSignOut={() => void actions.signOut()}
-        projectName={state.sidebarProjectName}
-        width={state.sidebarWidth}
-      />
+      {state.isSidebarOpen && (
+        <WorkspaceSidebar
+          accountImage={state.accountImage}
+          accountName={state.accountName}
+          activeFileId={state.activeFileId}
+          files={state.sidebarFilesForProject}
+          isSignedIn={state.isSignedIn}
+          onClose={actions.closeSidebar}
+          onOpenFile={actions.openWorkspaceFile}
+          onResizeStart={actions.handleResizeStart}
+          onSignIn={actions.signInToSave}
+          onSignOut={() => void actions.signOut()}
+          projectName={state.sidebarProjectName}
+          width={state.sidebarWidth}
+        />
+      )}
 
       <main className="flex h-full min-w-0 flex-1 flex-col overflow-hidden bg-white">
         <WorkspaceHeader
@@ -38,13 +41,14 @@ export function WorkspaceLayout() {
           isAgentOpen={state.isAgentOpen}
           isEditingName={state.isEditingName}
           isSignedIn={state.isSignedIn}
+          isSidebarOpen={state.isSidebarOpen}
           nameDraft={state.nameDraft}
           onBeginEditName={actions.beginEditName}
           onCancelName={actions.cancelName}
           onCommitName={() => void actions.commitName()}
           onNameDraftChange={actions.setNameDraft}
           onOpenAgent={actions.openAgent}
-          onSave={() => void actions.saveActiveFile()}
+          onOpenSidebar={actions.openSidebar}
           onSignIn={actions.signInToSave}
           projectName={state.sidebarProjectName}
           saveError={state.saveError}

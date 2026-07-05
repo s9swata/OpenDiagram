@@ -55,6 +55,7 @@ interface AskUserInput {
 }
 
 interface AIChatPanelProps {
+  activeFileType?: "diagram" | "doc";
   excalidrawAPI: ExcalidrawImperativeAPI | null;
   projectId?: string;
   fileId?: string;
@@ -81,7 +82,12 @@ function diagramRequestLikely(text: string) {
   );
 }
 
+function firstUserMessage(messages?: ChatMessage[]) {
+  return messages?.find((message) => message.role === "user") ?? null;
+}
+
 export function AIChatPanel({
+  activeFileType,
   excalidrawAPI,
   projectId,
   fileId,
@@ -96,7 +102,10 @@ export function AIChatPanel({
   // two in flight at once would clobber each other's elements.
   const applyChainRef = useRef<Promise<void>>(Promise.resolve());
   const messageIdRef = useRef(initialHistory?.length ?? 0);
-  const [projectMessages, setProjectMessages] = useState<ChatMessage[]>(initialHistory ?? []);
+  const autoDiagramPrompt = activeFileType === "diagram" ? firstUserMessage(initialHistory) : null;
+  const [projectMessages, setProjectMessages] = useState<ChatMessage[]>(
+    autoDiagramPrompt ? [] : (initialHistory ?? []),
+  );
   const [projectStatus, setProjectStatus] = useState<ChatStatus>("ready");
   const [projectError, setProjectError] = useState<string | null>(null);
   const [themeName, setThemeName] = useState<ThemeName>("sketch");
@@ -118,6 +127,21 @@ export function AIChatPanel({
     }),
     sendAutomaticallyWhen: lastAssistantMessageIsCompleteWithToolCalls,
   });
+
+  useEffect(() => {
+    messageIdRef.current = initialHistory?.length ?? 0;
+    setProjectMessages(autoDiagramPrompt ? [] : (initialHistory ?? []));
+  }, [autoDiagramPrompt, fileId, initialHistory]);
+
+  useEffect(() => {
+    if (!autoDiagramPrompt || !excalidrawAPI || diagramMessages.length > 0) return;
+
+    const key = `opendiagram:auto-diagram:${projectId ?? "guest"}:${fileId ?? "file"}:${autoDiagramPrompt.id}`;
+    if (window.sessionStorage.getItem(key)) return;
+
+    window.sessionStorage.setItem(key, "1");
+    void sendMessage({ text: autoDiagramPrompt.text });
+  }, [autoDiagramPrompt, diagramMessages.length, excalidrawAPI, fileId, projectId, sendMessage]);
 
   // Apply each finished draw_diagram call to the canvas exactly once. If the
   // agent redraws a diagram it already drew (same title), the old frame is
@@ -263,13 +287,6 @@ export function AIChatPanel({
 
   return (
     <div className="flex min-h-0 flex-1 flex-col border-l border-od-border-soft bg-white text-od-ink">
-      <div className="shrink-0 border-b border-od-border-soft bg-[radial-gradient(circle_at_top_left,rgba(232,229,216,0.9),transparent_42%),linear-gradient(180deg,rgba(255,255,255,0.96),rgba(250,249,245,0.9))] px-4 py-3">
-        <div>
-          <p className="text-[13px] font-semibold leading-none">Picasso</p>
-          <p className="mt-1 truncate text-[11px] text-od-ink-faint">OpenDiagram agent</p>
-        </div>
-      </div>
-
       <Conversation className="min-h-0 flex-1">
         <ConversationContent className="flex flex-col gap-4 px-4 py-4">
           <RepoGenerationProgress
@@ -347,7 +364,7 @@ export function AIChatPanel({
                 </SelectContent>
               </Select>
               <p className="flex-1 pr-2 text-right text-xs text-od-ink-faint">
-                {projectStatus === "submitted" ? "Reading project memory" : "Gemini 2.5 Flash"}
+                {projectStatus === "submitted" ? "Reading project memory" : "Picasso"}
               </p>
               <PromptInputSubmit status={submitStatus} />
             </PromptInputFooter>

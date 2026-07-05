@@ -43,7 +43,7 @@ export function Footer() {
 
           <div className="inline-flex items-center justify-center gap-2 overflow-visible rounded-[90px] bg-white/30 p-2">
             <Link
-              href="/import/github"
+              href="/dashboard"
               className="inline-flex cursor-pointer items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-medium text-black transition-all hover:opacity-90"
             >
               Create a Vibe Diagram
@@ -65,7 +65,8 @@ export function Footer() {
         </div>
 
         <div className="flex w-full items-center justify-between gap-2.5 overflow-hidden max-md:flex-col max-md:items-start max-md:gap-6">
-          <div className="inline-flex h-11 items-center justify-center overflow-hidden border-y border-white/50 px-4">
+          <div className="inline-flex h-11 items-center justify-center gap-2 overflow-hidden border-y border-white/50 px-4">
+            <img src="/logo_opendiagram.png" alt="" className="h-6 w-6 shrink-0 invert" />
             <span className="text-base leading-[1.7] text-white">© Team Vyse, 2026</span>
           </div>
           <div className="flex flex-1 items-center justify-end gap-9 text-base leading-[1.7] text-white max-md:justify-start">

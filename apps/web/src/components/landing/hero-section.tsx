@@ -142,18 +142,18 @@ export function HeroSection() {
 
           <div className="flex w-full flex-wrap items-center justify-center gap-3">
             <h1 className="hero-copy text-center text-[78px] font-normal leading-[1.15] -tracking-[0.06em] max-md:text-5xl max-sm:text-4xl">
-              Create{" "}
+              Vibe{" "}
             </h1>
             <Slideshow className="hero-media-box" />
             <h1 className="hero-copy text-center text-[78px] font-normal leading-[1.15] -tracking-[0.06em] max-md:text-5xl max-sm:text-4xl">
-              <span className="text-black/50">Vibe</span>
+              <span className="text-black/50">Diagrams for</span>
             </h1>
             <h1 className="hero-copy text-center text-[78px] font-normal leading-[1.15] -tracking-[0.06em] max-md:text-5xl max-sm:text-4xl">
-              <span className="text-black/50">Diagrams for </span>
+              <span className="text-black/50">Complex </span>
             </h1>
             <ProjectNames className="hero-media-box" />
             <h1 className="hero-copy text-center text-[78px] font-normal leading-[1.15] -tracking-[0.06em] max-md:text-5xl max-sm:text-4xl">
-              Software Teams
+              System Designs
             </h1>
           </div>
 
@@ -200,6 +200,14 @@ export function HeroSection() {
             </div>
             <span className="text-xs">Made for Vibe Diagrammers</span>
           </div>
+        </div>
+
+        <div className="hero-copy mt-12 w-full max-w-[1200px] overflow-hidden rounded-lg border border-black/10 shadow-2xl">
+          <img
+            src="/dashboard-od.png"
+            alt="OpenDiagram Dashboard"
+            className="w-full object-cover rounded-lg"
+          />
         </div>
       </div>
     </section>

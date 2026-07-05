@@ -1,6 +1,14 @@
 import type { ComponentType } from "react";
 import Link from "next/link";
-import { ArrowLeft, FileText, LogIn, LogOut, PenTool, Settings } from "lucide-react";
+import {
+  ArrowLeft,
+  FileText,
+  LogIn,
+  LogOut,
+  PanelLeftClose,
+  PenTool,
+  Settings,
+} from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -22,6 +30,7 @@ type WorkspaceSidebarProps = {
   width: number;
   onResizeStart: (pane: "sidebar" | "agent", event: React.MouseEvent) => void;
   onOpenFile: (fileId: string) => void;
+  onClose: () => void;
   onSignIn: () => void;
   onSignOut: () => void;
 };
@@ -42,6 +51,7 @@ export function WorkspaceSidebar({
   width,
   onResizeStart,
   onOpenFile,
+  onClose,
   onSignIn,
   onSignOut,
 }: WorkspaceSidebarProps) {
@@ -108,6 +118,14 @@ export function WorkspaceSidebar({
             </DropdownMenuGroup>
           </DropdownMenuContent>
         </DropdownMenu>
+        <button
+          type="button"
+          onClick={onClose}
+          className="grid h-8 w-8 place-items-center rounded-[8px] text-od-ink-faint transition hover:bg-od-canvas/60 hover:text-od-ink"
+          aria-label="Collapse workspace sidebar"
+        >
+          <PanelLeftClose className="h-4 w-4" />
+        </button>
       </div>
 
       <div className="flex min-h-0 flex-1 flex-col px-3 py-4">
