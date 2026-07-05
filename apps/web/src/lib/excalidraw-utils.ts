@@ -7,6 +7,9 @@ const NEW_DIAGRAM_GAP = 160;
 // diagram starts a new row below instead of extending the canvas rightward.
 const MAX_ROW_WIDTH = 3600;
 
+/** Must match the same constant in useWorkspaceLayoutController.ts */
+const WELCOME_GROUP_ID = "__opendiagram_welcome__";
+
 function toElementSkeleton(skeleton: RenderSkeleton): ExcalidrawElementSkeleton {
   switch (skeleton.kind) {
     case "container":
@@ -134,9 +137,13 @@ export async function applyDiagramToCanvas(
   const oldFrame = opts?.replaceFrameId
     ? scene.find((el) => el.id === opts.replaceFrameId)
     : undefined;
-  const kept = opts?.replaceFrameId
+  const kept = (opts?.replaceFrameId
     ? scene.filter((el) => el.id !== opts.replaceFrameId && el.frameId !== opts.replaceFrameId)
-    : scene;
+    : scene
+  ).filter(
+    // Strip welcome placeholder elements — real diagram content is replacing them.
+    (el) => !(el as unknown as { groupIds?: string[] }).groupIds?.includes(WELCOME_GROUP_ID),
+  );
 
   if (converted.length > 0) {
     const newBounds = contentBounds(converted);
@@ -182,6 +189,19 @@ export async function applyDiagramToCanvas(
   }
 
   api.updateScene({ elements: [...kept, ...converted] });
+
+  // Excalidraw loads fonts lazily when it encounters elements using them.
+  // After updateScene the font requests are in-flight but text dimensions
+  // were already computed against a fallback font, causing symbols to render
+  // with incorrect sizes.  Wait for all pending font loads to settle and
+  // then force Excalidraw to re-measure every text element.
+  try {
+    await document.fonts.ready;
+    api.refresh();
+  } catch {
+    // Non-critical: worst case the user sees the "refresh fixes it" behavior
+    // which is no worse than the current state.
+  }
 
   const frame = converted.find((el) => el.type === "frame");
   api.scrollToContent(frame ?? converted, { fitToContent: true, animate: true, duration: 400 });

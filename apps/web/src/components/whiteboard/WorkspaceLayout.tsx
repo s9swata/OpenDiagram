@@ -72,6 +72,16 @@ export function WorkspaceLayout() {
           excalidrawAPI={state.excalidrawAPI}
           fileId={agentFileId}
           initialHistory={activeHistory}
+          hasExistingScene={Boolean(
+            state.initialScene &&
+              typeof state.initialScene === "object" &&
+              ((Array.isArray((state.initialScene as any).skeletons) &&
+                (state.initialScene as any).skeletons.length > 0) ||
+                (Array.isArray((state.initialScene as any).elements) &&
+                  (state.initialScene as any).elements.some(
+                    (el: any) => !el.groupIds?.includes("__opendiagram_welcome__")
+                  )))
+          )}
           onClose={actions.closeAgent}
           onResizeStart={actions.handleResizeStart}
           projectId={agentProjectId}

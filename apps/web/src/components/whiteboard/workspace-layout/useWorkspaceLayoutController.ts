@@ -49,6 +49,10 @@ type ResizeState = {
   onUp: () => void;
 };
 
+/** Sentinel groupId used to tag the placeholder welcome text so it can be
+ * removed once the user or agent adds real content to the canvas. */
+const WELCOME_GROUP_ID = "__opendiagram_welcome__";
+
 async function loadWelcomeScene(api: ExcalidrawImperativeAPI) {
   const { convertToExcalidrawElements } = await import("@excalidraw/excalidraw");
   const elements = convertToExcalidrawElements([
@@ -60,6 +64,7 @@ async function loadWelcomeScene(api: ExcalidrawImperativeAPI) {
       fontSize: 28,
       textAlign: "center",
       strokeColor: "#888",
+      groupIds: [WELCOME_GROUP_ID],
     },
     {
       type: "text",
@@ -69,9 +74,22 @@ async function loadWelcomeScene(api: ExcalidrawImperativeAPI) {
       fontSize: 18,
       textAlign: "center",
       strokeColor: "#aaa",
+      groupIds: [WELCOME_GROUP_ID],
     },
   ]);
   api.updateScene({ elements });
+}
+
+/** Remove welcome placeholder elements from the scene. Returns true if any
+ * were removed. */
+function clearWelcomeElements(api: ExcalidrawImperativeAPI): boolean {
+  const scene = api.getSceneElements();
+  const kept = scene.filter(
+    (el) => !(el as unknown as { groupIds?: string[] }).groupIds?.includes(WELCOME_GROUP_ID),
+  );
+  if (kept.length === scene.length) return false;
+  api.updateScene({ elements: kept });
+  return true;
 }
 
 export function useWorkspaceLayoutController() {
@@ -132,6 +150,8 @@ export function useWorkspaceLayoutController() {
   sidebarWidthRef.current = sidebarWidth;
   agentWidthRef.current = agentWidth;
   const welcomeSceneRef = useRef(false);
+  const excalidrawAPIRef = useRef<ExcalidrawImperativeAPI | null>(null);
+  excalidrawAPIRef.current = excalidrawAPI;
   const isSignedIn = Boolean(session.data?.user);
   const isSignedInRef = useRef(isSignedIn);
   isSignedInRef.current = isSignedIn;
@@ -139,6 +159,15 @@ export function useWorkspaceLayoutController() {
   useEffect(() => {
     activeFileRef.current = activeFile;
   }, [activeFile]);
+
+  const lastProjectIdRef = useRef<string | null>(null);
+
+  useEffect(() => {
+    if (params.projectId && params.projectId !== lastProjectIdRef.current) {
+      lastProjectIdRef.current = params.projectId;
+      closeSidebar();
+    }
+  }, [params.projectId, closeSidebar]);
 
   useEffect(() => {
     const nextDraft = getGuestProjectDraft(params.projectId);
@@ -449,6 +478,17 @@ export function useWorkspaceLayoutController() {
     (elements: readonly unknown[], appState: unknown, files: unknown) => {
       const version = sceneElementsVersion(elements);
       if (version === lastSavedVersionRef.current) return;
+
+      // Remove welcome placeholder the first time real content appears
+      if (welcomeSceneRef.current && excalidrawAPIRef.current) {
+        const hasNonWelcome = (elements as { groupIds?: string[] }[]).some(
+          (el) => !el.groupIds?.includes(WELCOME_GROUP_ID),
+        );
+        if (hasNonWelcome) {
+          welcomeSceneRef.current = false;
+          clearWelcomeElements(excalidrawAPIRef.current);
+        }
+      }
 
       const scene = { elements, appState: sanitizeSceneAppState(appState), files };
       sceneRef.current = scene;

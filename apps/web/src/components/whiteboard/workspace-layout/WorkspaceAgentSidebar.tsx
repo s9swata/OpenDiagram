@@ -9,6 +9,7 @@ type WorkspaceAgentSidebarProps = {
   agentWidth: number;
   excalidrawAPI: ExcalidrawImperativeAPI | null;
   fileId?: string;
+  hasExistingScene?: boolean;
   initialHistory?: { id: string; role: "user" | "assistant"; text: string }[];
   projectId?: string;
   repoGenerationError: string | null;
@@ -22,6 +23,7 @@ export function WorkspaceAgentSidebar({
   agentWidth,
   excalidrawAPI,
   fileId,
+  hasExistingScene,
   initialHistory,
   projectId,
   repoGenerationError,
@@ -57,6 +59,7 @@ export function WorkspaceAgentSidebar({
         projectId={projectId}
         fileId={fileId}
         initialHistory={initialHistory}
+        hasExistingScene={hasExistingScene}
         repoGenerationJob={repoGenerationJob}
         repoGenerationError={repoGenerationError}
       />

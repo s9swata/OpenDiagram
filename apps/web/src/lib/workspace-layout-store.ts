@@ -88,10 +88,14 @@ export const useWorkspaceLayoutStore = create<WorkspaceLayoutStore>()(
     {
       name: "workspace-layout",
       storage: createJSONStorage(() => localStorage),
+      version: 1,
+      migrate: (persistedState) => ({
+        ...(persistedState as Partial<WorkspaceLayoutStore>),
+        isSidebarOpen: false,
+      }),
       partialize: (state) => ({
         sidebarWidth: state.sidebarWidth,
         agentWidth: state.agentWidth,
-        isSidebarOpen: state.isSidebarOpen,
         isAgentOpen: state.isAgentOpen,
       }),
     },

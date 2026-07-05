@@ -60,6 +60,9 @@ interface AIChatPanelProps {
   projectId?: string;
   fileId?: string;
   initialHistory?: ChatMessage[];
+  /** When true the file already has a saved diagram — skip auto-running the
+   *  initial prompt so reopening a file doesn't re-generate the diagram. */
+  hasExistingScene?: boolean;
   repoGenerationJob?: RepoGenerationJob | null;
   repoGenerationError?: string | null;
 }
@@ -92,6 +95,7 @@ export function AIChatPanel({
   projectId,
   fileId,
   initialHistory,
+  hasExistingScene,
   repoGenerationJob,
   repoGenerationError,
 }: AIChatPanelProps) {
@@ -135,13 +139,15 @@ export function AIChatPanel({
 
   useEffect(() => {
     if (!autoDiagramPrompt || !excalidrawAPI || diagramMessages.length > 0) return;
+    // The file already has a generated diagram — don't re-run the prompt.
+    if (hasExistingScene) return;
 
     const key = `opendiagram:auto-diagram:${projectId ?? "guest"}:${fileId ?? "file"}:${autoDiagramPrompt.id}`;
     if (window.sessionStorage.getItem(key)) return;
 
     window.sessionStorage.setItem(key, "1");
     void sendMessage({ text: autoDiagramPrompt.text });
-  }, [autoDiagramPrompt, diagramMessages.length, excalidrawAPI, fileId, projectId, sendMessage]);
+  }, [autoDiagramPrompt, diagramMessages.length, excalidrawAPI, fileId, hasExistingScene, projectId, sendMessage]);
 
   // Apply each finished draw_diagram call to the canvas exactly once. If the
   // agent redraws a diagram it already drew (same title), the old frame is
