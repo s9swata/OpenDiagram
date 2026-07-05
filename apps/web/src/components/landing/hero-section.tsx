@@ -6,9 +6,10 @@ import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import gsap from "gsap";
 
 const slideshowImages = [
-  "https://framerusercontent.com/images/jSslhcqo8HKNjUvPEceq7bhbY.jpg",
-  "https://framerusercontent.com/images/wWjLitV3mnO3fgL2J1WnS6WKDU.jpg",
-  "https://framerusercontent.com/images/0Y1cjcOdQp68PBw6G3HHfHz6TYo.jpg",
+  "/slideshow/vibediagram1.png",
+  "/slideshow/diagram2.webp",
+  "/slideshow/diagram3.webp",
+  "/slideshow/diagram4.webp",
 ];
 
 const projectNames = ["Cal.com", "Dub", "Hono", "Supabase", "Storybook"];
