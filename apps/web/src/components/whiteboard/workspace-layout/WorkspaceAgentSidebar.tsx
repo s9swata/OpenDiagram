@@ -14,6 +14,7 @@ type WorkspaceAgentSidebarProps = {
   projectId?: string;
   repoGenerationError: string | null;
   repoGenerationJob: RepoGenerationJob | null;
+  onCapacityError: () => void;
   onClose: () => void;
   onResizeStart: (pane: "sidebar" | "agent", event: React.MouseEvent) => void;
 };
@@ -28,6 +29,7 @@ export function WorkspaceAgentSidebar({
   projectId,
   repoGenerationError,
   repoGenerationJob,
+  onCapacityError,
   onClose,
   onResizeStart,
 }: WorkspaceAgentSidebarProps) {
@@ -62,6 +64,7 @@ export function WorkspaceAgentSidebar({
         hasExistingScene={hasExistingScene}
         repoGenerationJob={repoGenerationJob}
         repoGenerationError={repoGenerationError}
+        onCapacityError={onCapacityError}
       />
     </aside>
   );

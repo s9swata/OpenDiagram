@@ -112,6 +112,14 @@ export type RepoGenerationJob = {
   updatedAt: string;
 };
 
+export type CreationQuota = {
+  actorType: "guest" | "user";
+  limit: number;
+  used: number;
+  remaining: number;
+  resetAt: string | null;
+};
+
 async function readProjectResponse(response: Response) {
   const contentType = response.headers.get("content-type");
 
@@ -230,6 +238,19 @@ export async function createProjectFile(
   return data.file;
 }
 
+export async function getCreationQuota(): Promise<CreationQuota> {
+  const response = await fetch(`${env.NEXT_PUBLIC_SERVER_URL}/api/usage/creation-quota`, {
+    credentials: "include",
+  });
+  const data = await readProjectResponse(response);
+
+  if (!response.ok) {
+    throw new Error(data?.error ?? "Could not load creation quota.");
+  }
+
+  return data.quota;
+}
+
 export async function updateProjectFile(
   projectId: string,
   fileId: string,
@@ -251,6 +272,21 @@ export async function updateProjectFile(
   }
 
   return data.file;
+}
+
+export async function deleteProjectFile(projectId: string, fileId: string): Promise<void> {
+  const response = await fetch(
+    `${env.NEXT_PUBLIC_SERVER_URL}/api/projects/${projectId}/files/${fileId}`,
+    {
+      method: "DELETE",
+      credentials: "include",
+    },
+  );
+  const data = await readProjectResponse(response);
+
+  if (!response.ok) {
+    throw new Error(data?.error ?? "Could not delete project file.");
+  }
 }
 
 export async function getProjectMemoryStatus(projectId: string): Promise<ProjectMemoryStatus> {

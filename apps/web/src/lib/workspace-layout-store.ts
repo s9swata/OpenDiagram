@@ -33,6 +33,7 @@ type WorkspaceLayoutStore = {
   }) => void;
   setActiveFileId: (fileId: string | null) => void;
   upsertFile: (file: WorkspaceSidebarFile) => void;
+  removeFile: (fileId: string) => void;
   clearProject: (projectId?: string) => void;
 };
 
@@ -73,6 +74,11 @@ export const useWorkspaceLayoutStore = create<WorkspaceLayoutStore>()(
               : [file, ...state.files],
           };
         }),
+      removeFile: (fileId) =>
+        set((state) => ({
+          files: state.files.filter((item) => item.id !== fileId),
+          activeFileId: state.activeFileId === fileId ? null : state.activeFileId,
+        })),
       clearProject: (projectId) =>
         set((state) => {
           if (projectId && state.projectId !== projectId) return state;

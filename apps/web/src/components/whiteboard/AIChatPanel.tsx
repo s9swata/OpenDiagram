@@ -65,6 +65,7 @@ interface AIChatPanelProps {
   hasExistingScene?: boolean;
   repoGenerationJob?: RepoGenerationJob | null;
   repoGenerationError?: string | null;
+  onCapacityError?: () => void;
 }
 
 /** The last assistant message's unanswered ask_user call, if any. */
@@ -89,6 +90,25 @@ function firstUserMessage(messages?: ChatMessage[]) {
   return messages?.find((message) => message.role === "user") ?? null;
 }
 
+async function fetchDiagramChat(input: RequestInfo | URL, init?: RequestInit) {
+  const response = await fetch(input, { ...init, credentials: "include" });
+  if (response.ok) return response;
+
+  const data = await response.json().catch(() => null);
+  throw new Error(data?.error ?? "The diagram agent is unavailable. Try again.");
+}
+
+function isQuotaOrCapacityError(message: string) {
+  const normalized = message.toLowerCase();
+  return (
+    normalized.includes("quota") ||
+    normalized.includes("capacity") ||
+    normalized.includes("rate limit") ||
+    normalized.includes("429") ||
+    normalized.includes("painters are chilling")
+  );
+}
+
 export function AIChatPanel({
   activeFileType,
   excalidrawAPI,
@@ -98,6 +118,7 @@ export function AIChatPanel({
   hasExistingScene,
   repoGenerationJob,
   repoGenerationError,
+  onCapacityError,
 }: AIChatPanelProps) {
   const currentSpecRef = useRef<DiagramSpec | undefined>(undefined);
   const frameByTitleRef = useRef(new Map<string, string>());
@@ -128,6 +149,7 @@ export function AIChatPanel({
     transport: new DefaultChatTransport({
       api: `${env.NEXT_PUBLIC_SERVER_URL}/api/diagram/chat`,
       body: () => ({ currentSpec: currentSpecRef.current, theme: themeRef.current }),
+      fetch: fetchDiagramChat,
     }),
     sendAutomaticallyWhen: lastAssistantMessageIsCompleteWithToolCalls,
   });
@@ -136,6 +158,11 @@ export function AIChatPanel({
     messageIdRef.current = initialHistory?.length ?? 0;
     setProjectMessages(autoDiagramPrompt ? [] : (initialHistory ?? []));
   }, [autoDiagramPrompt, fileId, initialHistory]);
+
+  useEffect(() => {
+    if (!diagramError?.message || !isQuotaOrCapacityError(diagramError.message)) return;
+    onCapacityError?.();
+  }, [diagramError, onCapacityError]);
 
   useEffect(() => {
     if (!autoDiagramPrompt || !excalidrawAPI || diagramMessages.length > 0) return;
@@ -147,7 +174,15 @@ export function AIChatPanel({
 
     window.sessionStorage.setItem(key, "1");
     void sendMessage({ text: autoDiagramPrompt.text });
-  }, [autoDiagramPrompt, diagramMessages.length, excalidrawAPI, fileId, hasExistingScene, projectId, sendMessage]);
+  }, [
+    autoDiagramPrompt,
+    diagramMessages.length,
+    excalidrawAPI,
+    fileId,
+    hasExistingScene,
+    projectId,
+    sendMessage,
+  ]);
 
   // Apply each finished draw_diagram call to the canvas exactly once. If the
   // agent redraws a diagram it already drew (same title), the old frame is
@@ -228,6 +263,7 @@ export function AIChatPanel({
         setProjectStatus("ready");
       } catch (err) {
         const message = err instanceof Error ? err.message : "Project chat failed";
+        if (isQuotaOrCapacityError(message)) onCapacityError?.();
         setProjectMessages((prev) => [
           ...prev,
           { id: `msg-${messageIdRef.current++}`, role: "assistant", text: `Error: ${message}` },
@@ -238,7 +274,7 @@ export function AIChatPanel({
 
       return true;
     },
-    [fileId, projectId],
+    [fileId, onCapacityError, projectId],
   );
 
   const handleSubmit = useCallback(
@@ -334,14 +370,13 @@ export function AIChatPanel({
             </div>
           )}
           {diagramStatus === "error" && (
-            <p className="text-xs text-destructive">
-              Something went wrong{diagramError?.message ? ` — ${diagramError.message}` : ""}. Try
-              again.
+            <p className="text-xs text-od-ink-faint">
+              {diagramError?.message ?? "Something went wrong. Try again."}
             </p>
           )}
-          {projectError && <p className="text-xs text-destructive">{projectError}</p>}
+          {projectError && <p className="text-xs text-od-ink-faint">{projectError}</p>}
           {applyError && (
-            <p className="text-xs text-destructive">Couldn't draw on canvas — {applyError}</p>
+            <p className="text-xs text-od-ink-faint">Couldn't draw on canvas — {applyError}</p>
           )}
         </ConversationContent>
         <ConversationScrollButton />
@@ -493,7 +528,7 @@ function renderPart(
     }
     if (part.state === "output-error") {
       return (
-        <p key={key} className="text-xs text-destructive">
+        <p key={key} className="text-xs text-od-ink-faint">
           Drawing failed: {part.errorText}
         </p>
       );

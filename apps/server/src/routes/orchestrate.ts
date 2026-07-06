@@ -1,8 +1,7 @@
-import { groq } from "@ai-sdk/groq";
 import { generateText } from "ai";
 import { Hono } from "hono";
 import { z } from "zod";
-import { env } from "@OpenDiagram/env/server";
+import { createOrchestratorModel } from "../lib/ai-provider";
 
 const requestSchema = z.object({
   text: z.string().trim().min(1).max(2000),
@@ -36,13 +35,9 @@ orchestrateRoute.post("/", async (c) => {
     return c.json({ intent: "diagram" });
   }
 
-  if (!env.GROQ_API_KEY) {
-    return c.json({ intent: "project_chat" });
-  }
-
   try {
     const { text: response } = await generateText({
-      model: groq("groq/compound-mini"),
+      model: createOrchestratorModel(),
       system: SYSTEM_PROMPT,
       prompt: text,
       timeout: 15_000,

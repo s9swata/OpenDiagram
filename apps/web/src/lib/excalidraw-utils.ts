@@ -137,9 +137,10 @@ export async function applyDiagramToCanvas(
   const oldFrame = opts?.replaceFrameId
     ? scene.find((el) => el.id === opts.replaceFrameId)
     : undefined;
-  const kept = (opts?.replaceFrameId
-    ? scene.filter((el) => el.id !== opts.replaceFrameId && el.frameId !== opts.replaceFrameId)
-    : scene
+  const kept = (
+    opts?.replaceFrameId
+      ? scene.filter((el) => el.id !== opts.replaceFrameId && el.frameId !== opts.replaceFrameId)
+      : scene
   ).filter(
     // Strip welcome placeholder elements — real diagram content is replacing them.
     (el) => !(el as unknown as { groupIds?: string[] }).groupIds?.includes(WELCOME_GROUP_ID),

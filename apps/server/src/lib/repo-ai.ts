@@ -1,27 +1,14 @@
-import { createGoogle } from "@ai-sdk/google";
 import { diagramSpecSchema, type DiagramSpec, type DiagramType } from "@OpenDiagram/harness";
-import { env } from "@OpenDiagram/env/server";
 import { generateObject, generateText } from "ai";
+import { createPrimaryModel } from "./ai-provider";
 import { buildIconCatalog } from "./icons/registry";
 
-// The AI SDK retries retryable errors (429/5xx) with exponential backoff up to
-// this many times. A single provider (Gemini) handles every task — no
-// cross-provider fallback — so a rate-limited call just retries Gemini.
+// The AI SDK retries retryable errors (429/5xx) with exponential backoff.
 export const LLM_MAX_RETRIES = 3;
 
-const GOOGLE_DEFAULTS = {
-  model: "gemini-2.5-flash",
-  maxTokens: 8192,
+const LLM_DEFAULTS = {
+  maxTokens: 16384,
 };
-
-// Gemini — used for every LLM task (diagrams, docs, analysis, project chat).
-function createGeminiModel() {
-  if (!env.GOOGLE_GENERATIVE_AI_API_KEY) {
-    throw new Error("GOOGLE_GENERATIVE_AI_API_KEY is required.");
-  }
-  const google = createGoogle({ apiKey: env.GOOGLE_GENERATIVE_AI_API_KEY });
-  return google(GOOGLE_DEFAULTS.model);
-}
 
 const DIAGRAM_TYPE_GUIDE = `Diagram type guide:
 - system-design: microservices, APIs, data flow between services
@@ -44,6 +31,8 @@ const COLOR_CONVENTIONS = `Color conventions (use in node.style):
 
 const RULES = `Rules:
 - Every node MUST have an id (snake_case, unique)
+- node.category MUST be one of: service, database, queue, gateway, client, external, storage, cache, function, user
+- node.shape MUST be one of: rectangle, ellipse, diamond, cylinder, document
 - Groups reference node ids in contains[]
 - Edges reference node ids in from/to
 - Prefer real icon keys over generic shapes
@@ -116,19 +105,21 @@ export async function generateDiagramSpec(input: {
     ? `Project context:\n${input.context}\n\nUser request:\n${input.prompt}`
     : input.prompt;
 
-  const result = await generateObject({
-    model: createGeminiModel(),
-    schema: diagramSpecSchema,
+  const request = {
     system: buildSystemPrompt(input.diagramType),
-    prompt: userPrompt,
     maxRetries: LLM_MAX_RETRIES,
-    // Bounds runaway/repetition-loop generations (observed during testing:
-    // gemini-2.5-flash occasionally gets stuck dumping a huge repeated string
-    // into a field instead of terminating) so a bad completion fails fast
-    // instead of hanging for a minute-plus. 8192 comfortably fits a normal
-    // multi-node DiagramSpec while keeping worst-case failures quick.
-    maxOutputTokens: GOOGLE_DEFAULTS.maxTokens,
+    // Bounds runaway/repetition-loop generations so a bad completion fails fast
+    // instead of hanging for a minute-plus.
+    maxOutputTokens: LLM_DEFAULTS.maxTokens,
+  };
+
+  const result = await generateObject({
+    ...request,
+    model: createPrimaryModel(),
+    schema: diagramSpecSchema,
+    prompt: userPrompt,
   });
+
   return result.object;
 }
 
@@ -137,8 +128,7 @@ export async function generateGroundedProjectAnswer(input: {
   message: string;
   context: string;
 }): Promise<string> {
-  const result = await generateText({
-    model: createGeminiModel(),
+  const request = {
     system: [
       "You are OpenDiagram's project assistant.",
       "Answer using only the provided project context.",
@@ -148,7 +138,8 @@ export async function generateGroundedProjectAnswer(input: {
     prompt: `Project context:\n${input.context}\n\nUser question:\n${input.message}`,
     maxRetries: LLM_MAX_RETRIES,
     maxOutputTokens: 1200,
-  });
+  };
+  const result = await generateText({ ...request, model: createPrimaryModel() });
 
   return result.text;
 }
@@ -162,8 +153,7 @@ export async function generateArchitectureDoc(input: {
   defaultBranch: string;
   commitSha: string;
 }): Promise<string> {
-  const result = await generateText({
-    model: createGeminiModel(),
+  const request = {
     system: [
       "You are an expert software architect writing technical documentation.",
       "Write detailed, structured markdown using only the provided project context.",
@@ -188,7 +178,8 @@ export async function generateArchitectureDoc(input: {
     ].join("\n"),
     maxRetries: LLM_MAX_RETRIES,
     maxOutputTokens: 4096,
-  });
+  };
+  const result = await generateText({ ...request, model: createPrimaryModel() });
 
   return result.text;
 }

@@ -14,10 +14,10 @@ export const env = createEnv({
     // the session cookie is shared across app.* (web) and api.* (server). Leave
     // unset locally -- localhost needs no cross-subdomain sharing.
     COOKIE_DOMAIN: z.string().min(1).optional(),
-    // Orchestrator intent classifier (optional — degrades to regex if unset).
+    // Groq is used only for the lightweight request orchestrator.
     GROQ_API_KEY: z.string().min(1).optional(),
-    // All LLM tasks (diagrams, docs, analysis, chat) run on Gemini.
-    // Functionally required in prod.
+    GROQ_API_KEYS: z.string().min(1).optional(),
+    // Gemini key used for LLM tasks.
     GOOGLE_GENERATIVE_AI_API_KEY: z.string().min(1).optional(),
     // Kimi / OpenAI-compatible gateway — currently unused (all tasks on Gemini).
     // Kept for easy re-enable; safe to leave unset.

@@ -1,5 +1,3 @@
-import { createGoogle } from "@ai-sdk/google";
-import { env } from "@OpenDiagram/env/server";
 import { diagramSpecSchema, themes } from "@OpenDiagram/harness";
 import {
   convertToModelMessages,
@@ -14,9 +12,19 @@ import { Hono } from "hono";
 import { z } from "zod";
 import { buildSystemPrompt } from "../lib/agent/prompt";
 import { askUserTool, createDrawDiagramTool } from "../lib/agent/tools";
+import {
+  createPrimaryModel,
+  isProviderCapacityError,
+  providerCapacityMessage,
+} from "../lib/ai-provider";
+import {
+  applyCreationQuotaHeaders,
+  consumeCreationQuota,
+  creationQuotaExceededResponse,
+  CreationQuotaExceededError,
+  getCreationQuotaActor,
+} from "../lib/creation-quota";
 import { LLM_MAX_RETRIES } from "../lib/repo-ai";
-
-const google = createGoogle({ apiKey: env.GOOGLE_GENERATIVE_AI_API_KEY });
 
 const chatRequestSchema = z.object({
   // UIMessage shape is owned by the AI SDK and too deep to mirror — validated
@@ -28,6 +36,8 @@ const chatRequestSchema = z.object({
 
 export const diagramRoute = new Hono<EvlogVariables>();
 
+const CHAT_MAX_OUTPUT_TOKENS = 16384;
+
 diagramRoute.post("/chat", async (c) => {
   const log = c.get("log");
   const body = await c.req.json().catch(() => null);
@@ -36,6 +46,17 @@ diagramRoute.post("/chat", async (c) => {
     return c.json({ error: "Invalid request", issues: parsed.error.issues }, 400);
   }
   const { messages, currentSpec, theme: themeName = "sketch" } = parsed.data;
+  const quotaActor = await getCreationQuotaActor(c);
+
+  try {
+    const quota = await consumeCreationQuota(quotaActor);
+    applyCreationQuotaHeaders(c, quota);
+  } catch (error) {
+    if (error instanceof CreationQuotaExceededError) {
+      return creationQuotaExceededResponse(c, error);
+    }
+    throw error;
+  }
 
   // convertToModelMessages throws on malformed UIMessage shapes -- that's a bad
   // client payload, not a server fault, so surface it as a 400.
@@ -54,34 +75,39 @@ diagramRoute.post("/chat", async (c) => {
     draw_diagram: createDrawDiagramTool(log, themes[themeName]),
   };
 
-  const result = streamText({
-    model: google("gemini-2.5-flash"),
+  const request = {
     instructions: buildSystemPrompt(currentSpec),
     messages: modelMessages,
     tools,
     stopWhen: isStepCount(6),
-    // Retry Gemini on rate-limit/transient errors (exponential backoff).
     maxRetries: LLM_MAX_RETRIES,
-    // Bounds runaway/repetition-loop generations so a bad completion fails
-    // fast instead of hanging (observed with gemini-2.5-flash during testing).
-    maxOutputTokens: 16384,
-    onFinish: ({ steps, totalUsage }) => {
+    maxOutputTokens: CHAT_MAX_OUTPUT_TOKENS,
+    onFinish: ({ steps, totalUsage }: { steps: any[]; totalUsage: { totalTokens?: number } }) => {
       log.set({
         chat: {
           messageCount: messages.length,
           hasCurrentSpec: currentSpec !== undefined,
           theme: themeName,
           steps: steps.length,
-          toolCalls: steps.flatMap((s) => s.toolCalls.map((t) => t.toolName)),
+          toolCalls: steps.flatMap((s) => s.toolCalls.map((t: { toolName: string }) => t.toolName)),
           totalTokens: totalUsage.totalTokens,
         },
       });
     },
-  });
+  };
+
+  const result = streamText({ ...request, model: createPrimaryModel() });
 
   return createUIMessageStreamResponse({
     // `tools` makes tool parts stream as static `tool-<name>` parts (the chat
     // panel matches on those) instead of generic `dynamic-tool` parts.
-    stream: toUIMessageStream({ stream: result.stream, tools }),
+    stream: toUIMessageStream({
+      stream: result.stream,
+      tools,
+      onError: (error) => {
+        if (isProviderCapacityError(error)) return providerCapacityMessage();
+        return "The diagram agent is unavailable. Try again.";
+      },
+    }),
   });
 });

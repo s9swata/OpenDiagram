@@ -7,6 +7,7 @@
     "check-types": "tsgo --noEmit",
     "compile": "bun build --compile --minify --sourcemap --bytecode ./src/index.ts --outfile server",
     "dev": "bun run src/index.ts",
+    "smoke:ai": "bun run src/scripts/ai-smoke.ts",
     "start": "bun run dist/index.mjs"
   },
   "dependencies": {

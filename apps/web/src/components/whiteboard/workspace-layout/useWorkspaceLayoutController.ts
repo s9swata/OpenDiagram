@@ -15,11 +15,13 @@ import {
 import {
   createProject,
   createProjectFile,
+  deleteProjectFile,
   getProject,
   getProjectFile,
   listProjectFiles,
   streamRepoGeneration,
   updateProjectFile,
+  type ProjectFileType,
   type RepoGenerationJob,
   type SavedProject,
   type SavedProjectFile,
@@ -143,6 +145,7 @@ export function useWorkspaceLayoutController() {
   const setProjectSnapshot = useWorkspaceLayoutStore((state) => state.setProjectSnapshot);
   const setStoredActiveFileId = useWorkspaceLayoutStore((state) => state.setActiveFileId);
   const upsertStoredFile = useWorkspaceLayoutStore((state) => state.upsertFile);
+  const removeStoredFile = useWorkspaceLayoutStore((state) => state.removeFile);
 
   const sidebarWidthRef = useRef(sidebarWidth);
   const agentWidthRef = useRef(agentWidth);
@@ -685,6 +688,81 @@ export function useWorkspaceLayoutController() {
     router.push(`/project/${params.projectId}/workspace/${fileId}`);
   }
 
+  async function createWorkspaceFile(type: ProjectFileType) {
+    if (!isSignedIn) {
+      setSaveError("Log in to save your project before adding files.");
+      return;
+    }
+
+    setSaveError(null);
+    setSaveStatus("saving");
+
+    try {
+      const file = await createProjectFile(params.projectId, {
+        name: type === "doc" ? "Untitled doc" : "Untitled diagram",
+        type,
+      });
+
+      setActiveFile(file);
+      upsertStoredFile(toSidebarFile(file));
+      setStoredActiveFileId(file.id);
+      currentFileIdRef.current = file.id;
+      sceneRef.current = null;
+      contentRef.current = "";
+      setDocContent("");
+      setInitialScene(null);
+      lastSavedVersionRef.current = 0;
+      dirtyRef.current = false;
+      setSaveStatus("saved");
+      router.push(`/project/${params.projectId}/workspace/${file.id}`);
+    } catch (err) {
+      setSaveStatus("error");
+      setSaveError(err instanceof Error ? err.message : "Could not create file.");
+    }
+  }
+
+  async function deleteWorkspaceFile(fileId: string) {
+    if (!isSignedIn) {
+      setSaveError("Log in to save your project before deleting files.");
+      return;
+    }
+
+    if (!window.confirm("Delete this file? This cannot be undone.")) return;
+
+    setSaveError(null);
+    setSaveStatus("saving");
+    if (autosaveTimer.current) clearTimeout(autosaveTimer.current);
+
+    try {
+      await deleteProjectFile(params.projectId, fileId);
+      removeStoredFile(fileId);
+
+      const nextFile = sidebarFiles.find((file) => file.id !== fileId);
+      if (activeFileRef.current?.id === fileId) {
+        setActiveFile(null);
+        currentFileIdRef.current = nextFile?.id ?? null;
+        sceneRef.current = null;
+        contentRef.current = "";
+        setDocContent("");
+        setInitialScene(null);
+        setStoredActiveFileId(nextFile?.id ?? null);
+        if (nextFile) {
+          router.replace(`/project/${params.projectId}/workspace/${nextFile.id}`);
+        } else {
+          setShowFirstFileDialog(true);
+          setFirstFileName("");
+          router.replace(`/project/${params.projectId}/workspace`);
+        }
+      }
+
+      dirtyRef.current = false;
+      setSaveStatus("saved");
+    } catch (err) {
+      setSaveStatus("error");
+      setSaveError(err instanceof Error ? err.message : "Could not delete file.");
+    }
+  }
+
   function beginEditName() {
     setNameDraft(activeFile?.name ?? draft?.name ?? "Your first design");
     setIsEditingName(true);
@@ -874,6 +952,8 @@ export function useWorkspaceLayoutController() {
       closeSidebar,
       openAgent,
       openSidebar,
+      createWorkspaceFile,
+      deleteWorkspaceFile,
       openWorkspaceFile,
       saveActiveFile,
       setFirstFileName,
