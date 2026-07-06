@@ -50,49 +50,6 @@ type ResizeState = {
   onUp: () => void;
 };
 
-/** Sentinel groupId used to tag the placeholder welcome text so it can be
- * removed once the user or agent adds real content to the canvas. */
-const WELCOME_GROUP_ID = "__opendiagram_welcome__";
-
-async function loadWelcomeScene(api: ExcalidrawImperativeAPI) {
-  const { convertToExcalidrawElements } = await import("@excalidraw/excalidraw");
-  const elements = convertToExcalidrawElements([
-    {
-      type: "text",
-      text: "Create your first vibe diagram today",
-      x: 180,
-      y: 180,
-      fontSize: 28,
-      textAlign: "center",
-      strokeColor: "#888",
-      groupIds: [WELCOME_GROUP_ID],
-    },
-    {
-      type: "text",
-      text: "Try our agent Picasso",
-      x: 290,
-      y: 225,
-      fontSize: 18,
-      textAlign: "center",
-      strokeColor: "#aaa",
-      groupIds: [WELCOME_GROUP_ID],
-    },
-  ]);
-  api.updateScene({ elements });
-}
-
-/** Remove welcome placeholder elements from the scene. Returns true if any
- * were removed. */
-function clearWelcomeElements(api: ExcalidrawImperativeAPI): boolean {
-  const scene = api.getSceneElements();
-  const kept = scene.filter(
-    (el) => !(el as unknown as { groupIds?: string[] }).groupIds?.includes(WELCOME_GROUP_ID),
-  );
-  if (kept.length === scene.length) return false;
-  api.updateScene({ elements: kept });
-  return true;
-}
-
 export function useWorkspaceLayoutController() {
   const params = useParams<{ projectId: string; workspaceId?: string }>();
   const router = useRouter();
@@ -101,6 +58,7 @@ export function useWorkspaceLayoutController() {
   const [draft, setDraft] = useState<GuestProjectDraft | null>(null);
   const [projectRow, setProjectRow] = useState<SavedProject | null>(null);
   const [activeFile, setActiveFile] = useState<SavedProjectFile | null>(null);
+  const [fileLoading, setFileLoading] = useState(false);
   const [initialScene, setInitialScene] = useState<unknown>(null);
   const [docContent, setDocContent] = useState("");
   const [repoGenerationJob, setRepoGenerationJob] = useState<RepoGenerationJob | null>(null);
@@ -151,7 +109,6 @@ export function useWorkspaceLayoutController() {
   const agentWidthRef = useRef(agentWidth);
   sidebarWidthRef.current = sidebarWidth;
   agentWidthRef.current = agentWidth;
-  const welcomeSceneRef = useRef(false);
   const excalidrawAPIRef = useRef<ExcalidrawImperativeAPI | null>(null);
   excalidrawAPIRef.current = excalidrawAPI;
   const isSignedIn = Boolean(session.data?.user);
@@ -255,6 +212,7 @@ export function useWorkspaceLayoutController() {
 
     async function loadActiveFile() {
       setSaveError(null);
+      setFileLoading(true);
 
       try {
         const [project, files] = await Promise.all([
@@ -279,6 +237,7 @@ export function useWorkspaceLayoutController() {
               });
               setShowFirstFileDialog(true);
               setFirstFileName("");
+              setFileLoading(false);
             }
             return;
           }
@@ -307,6 +266,8 @@ export function useWorkspaceLayoutController() {
         if (active) {
           setSaveError(err instanceof Error ? err.message : "Could not load project file.");
         }
+      } finally {
+        if (active) setFileLoading(false);
       }
     }
 
@@ -472,17 +433,6 @@ export function useWorkspaceLayoutController() {
       const version = sceneElementsVersion(elements);
       if (version === lastSavedVersionRef.current) return;
 
-      // Remove welcome placeholder the first time real content appears
-      if (welcomeSceneRef.current && excalidrawAPIRef.current) {
-        const hasNonWelcome = (elements as { groupIds?: string[] }[]).some(
-          (el) => !el.groupIds?.includes(WELCOME_GROUP_ID),
-        );
-        if (hasNonWelcome) {
-          welcomeSceneRef.current = false;
-          clearWelcomeElements(excalidrawAPIRef.current);
-        }
-      }
-
       const scene = { elements, appState: sanitizeSceneAppState(appState), files };
       sceneRef.current = scene;
 
@@ -581,14 +531,9 @@ export function useWorkspaceLayoutController() {
     if (!excalidrawAPI) return;
 
     if (!initialScene || typeof initialScene !== "object") {
-      if (!welcomeSceneRef.current) {
-        welcomeSceneRef.current = true;
-        void loadWelcomeScene(excalidrawAPI);
-      }
       return;
     }
 
-    welcomeSceneRef.current = false;
     const scene = initialScene as {
       elements?: unknown;
       appState?: unknown;
@@ -597,7 +542,7 @@ export function useWorkspaceLayoutController() {
       skeletons?: unknown;
     };
 
-    if (Array.isArray(scene.skeletons)) {
+    if (!Array.isArray(scene.elements) && Array.isArray(scene.skeletons)) {
       void applyDiagramToCanvas(
         excalidrawAPI,
         scene.skeletons as never[],
@@ -917,6 +862,7 @@ export function useWorkspaceLayoutController() {
       docContent,
       draft,
       excalidrawAPI,
+      fileLoading,
       firstFileName,
       initialScene,
       isAgentOpen,

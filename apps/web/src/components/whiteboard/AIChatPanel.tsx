@@ -42,6 +42,63 @@ interface ChatMessage {
   text: string;
 }
 
+function isChatMessage(value: unknown): value is ChatMessage {
+  if (!value || typeof value !== "object") return false;
+  const message = value as Partial<ChatMessage>;
+  return (
+    typeof message.id === "string" &&
+    (message.role === "user" || message.role === "assistant") &&
+    typeof message.text === "string"
+  );
+}
+
+function uiMessageText(message: UIMessage) {
+  return message.parts
+    .filter(
+      (part): part is Extract<UIMessage["parts"][number], { type: "text" }> => part.type === "text",
+    )
+    .map((part) => part.text)
+    .join("")
+    .trim();
+}
+
+function uiMessageToChatMessage(message: UIMessage): ChatMessage | null {
+  if (message.role !== "user" && message.role !== "assistant") return null;
+  const text = uiMessageText(message);
+  return text ? { id: message.id, role: message.role, text } : null;
+}
+
+function chatMessageToUIMessage(message: ChatMessage): UIMessage {
+  return {
+    id: message.id,
+    role: message.role,
+    parts: [{ type: "text", text: message.text }],
+  };
+}
+
+function normalizeHistory(history?: unknown[]) {
+  return (history ?? []).flatMap((entry) => {
+    if (isChatMessage(entry)) return [entry];
+    if (
+      entry &&
+      typeof entry === "object" &&
+      "parts" in entry &&
+      Array.isArray((entry as UIMessage).parts)
+    ) {
+      const message = uiMessageToChatMessage(entry as UIMessage);
+      return message ? [message] : [];
+    }
+    return [];
+  });
+}
+
+function uiMessagesToChatHistory(messages: UIMessage[]) {
+  return messages.flatMap((message) => {
+    const chatMessage = uiMessageToChatMessage(message);
+    return chatMessage ? [chatMessage] : [];
+  });
+}
+
 /** Mirror of the server's draw_diagram tool output (apps/server lib/agent/tools.ts). */
 interface DrawDiagramOutput {
   skeletons: RenderSkeleton[];
@@ -59,7 +116,8 @@ interface AIChatPanelProps {
   excalidrawAPI: ExcalidrawImperativeAPI | null;
   projectId?: string;
   fileId?: string;
-  initialHistory?: ChatMessage[];
+  initialHistory?: unknown[];
+  initialSpec?: DiagramSpec;
   /** When true the file already has a saved diagram — skip auto-running the
    *  initial prompt so reopening a file doesn't re-generate the diagram. */
   hasExistingScene?: boolean;
@@ -115,21 +173,26 @@ export function AIChatPanel({
   projectId,
   fileId,
   initialHistory,
+  initialSpec,
   hasExistingScene,
   repoGenerationJob,
   repoGenerationError,
   onCapacityError,
 }: AIChatPanelProps) {
-  const currentSpecRef = useRef<DiagramSpec | undefined>(undefined);
+  const currentSpecRef = useRef<DiagramSpec | undefined>(initialSpec);
   const frameByTitleRef = useRef(new Map<string, string>());
   const appliedToolCallsRef = useRef(new Set<string>());
   // Serializes canvas applies: each one reads and rewrites the whole scene, so
   // two in flight at once would clobber each other's elements.
   const applyChainRef = useRef<Promise<void>>(Promise.resolve());
-  const messageIdRef = useRef(initialHistory?.length ?? 0);
-  const autoDiagramPrompt = activeFileType === "diagram" ? firstUserMessage(initialHistory) : null;
+  const normalizedHistory = normalizeHistory(initialHistory);
+  const initialDiagramMessages =
+    activeFileType === "diagram" ? normalizedHistory.map(chatMessageToUIMessage) : [];
+  const messageIdRef = useRef(normalizedHistory.length);
+  const autoDiagramPrompt =
+    activeFileType === "diagram" ? firstUserMessage(normalizedHistory) : null;
   const [projectMessages, setProjectMessages] = useState<ChatMessage[]>(
-    autoDiagramPrompt ? [] : (initialHistory ?? []),
+    activeFileType === "diagram" ? [] : normalizedHistory,
   );
   const [projectStatus, setProjectStatus] = useState<ChatStatus>("ready");
   const [projectError, setProjectError] = useState<string | null>(null);
@@ -143,21 +206,32 @@ export function AIChatPanel({
     messages: diagramMessages,
     sendMessage,
     addToolOutput,
+    setMessages: setDiagramMessages,
     status: diagramStatus,
     error: diagramError,
   } = useChat({
+    messages: initialDiagramMessages,
     transport: new DefaultChatTransport({
       api: `${env.NEXT_PUBLIC_SERVER_URL}/api/diagram/chat`,
       body: () => ({ currentSpec: currentSpecRef.current, theme: themeRef.current }),
       fetch: fetchDiagramChat,
     }),
     sendAutomaticallyWhen: lastAssistantMessageIsCompleteWithToolCalls,
+    onFinish: ({ messages }) => {
+      if (!projectId || !fileId) return;
+      void updateProjectFile(projectId, fileId, { history: uiMessagesToChatHistory(messages) });
+    },
   });
 
   useEffect(() => {
-    messageIdRef.current = initialHistory?.length ?? 0;
-    setProjectMessages(autoDiagramPrompt ? [] : (initialHistory ?? []));
-  }, [autoDiagramPrompt, fileId, initialHistory]);
+    const nextHistory = normalizeHistory(initialHistory);
+    messageIdRef.current = nextHistory.length;
+    setProjectMessages(activeFileType === "diagram" ? [] : nextHistory);
+    setDiagramMessages(activeFileType === "diagram" ? nextHistory.map(chatMessageToUIMessage) : []);
+    currentSpecRef.current = initialSpec;
+    frameByTitleRef.current.clear();
+    appliedToolCallsRef.current.clear();
+  }, [activeFileType, fileId, initialHistory, initialSpec, setDiagramMessages]);
 
   useEffect(() => {
     if (!diagramError?.message || !isQuotaOrCapacityError(diagramError.message)) return;
@@ -208,6 +282,11 @@ export function AIChatPanel({
           })
             .then(({ frameId }) => {
               if (frameId) frameByTitleRef.current.set(spec.title, frameId);
+              if (projectId && fileId) {
+                window.setTimeout(() => {
+                  void updateProjectFile(projectId, fileId, { spec });
+                }, 0);
+              }
             })
             .catch((err: unknown) => {
               // Un-mark so the next messages update can retry after a
@@ -218,7 +297,7 @@ export function AIChatPanel({
         );
       }
     }
-  }, [diagramMessages, excalidrawAPI]);
+  }, [diagramMessages, excalidrawAPI, fileId, projectId]);
 
   const answerAskUser = useCallback(
     (toolCallId: string, answer: string) => {
@@ -254,7 +333,11 @@ export function AIChatPanel({
 
           if (fileId) {
             window.setTimeout(() => {
-              void updateProjectFile(projectId, fileId, { history: updated });
+              const history =
+                activeFileType === "diagram"
+                  ? [...uiMessagesToChatHistory(diagramMessages), ...updated]
+                  : updated;
+              void updateProjectFile(projectId, fileId, { history });
             }, 0);
           }
 
@@ -274,7 +357,7 @@ export function AIChatPanel({
 
       return true;
     },
-    [fileId, onCapacityError, projectId],
+    [activeFileType, diagramMessages, fileId, onCapacityError, projectId],
   );
 
   const handleSubmit = useCallback(

@@ -8,6 +8,7 @@ import type {
 } from "@excalidraw/excalidraw/types";
 import dynamic from "next/dynamic";
 import { useCallback } from "react";
+import { Spinner } from "@/components/ui/spinner";
 
 const Excalidraw = dynamic(
   async () => {
@@ -19,8 +20,11 @@ const Excalidraw = dynamic(
 
 function WhiteboardSkeleton() {
   return (
-    <div className="w-full h-full bg-muted animate-pulse flex items-center justify-center">
-      <span className="text-muted-foreground text-sm">Loading canvas…</span>
+    <div className="grid h-full w-full place-items-center bg-white text-od-ink-muted">
+      <div className="flex items-center gap-2 text-[13px]">
+        <Spinner className="size-4" />
+        Loading canvas...
+      </div>
     </div>
   );
 }
@@ -60,7 +64,7 @@ export function Whiteboard({ onAPIReady, onSceneChange, initialScene }: Whiteboa
   );
 
   return (
-    <div className="w-full h-full overflow-hidden relative">
+    <div className="relative h-full w-full overflow-hidden">
       <Excalidraw
         excalidrawAPI={handleAPI}
         initialData={toExcalidrawInitialData(initialScene)}

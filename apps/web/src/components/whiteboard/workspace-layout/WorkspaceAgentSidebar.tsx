@@ -1,4 +1,5 @@
 import type { ExcalidrawImperativeAPI } from "@excalidraw/excalidraw/types";
+import type { DiagramSpec } from "@OpenDiagram/harness";
 import { PanelRightClose } from "lucide-react";
 import type { RepoGenerationJob } from "@/lib/projects-client";
 import { AIChatPanel } from "../AIChatPanel";
@@ -10,7 +11,8 @@ type WorkspaceAgentSidebarProps = {
   excalidrawAPI: ExcalidrawImperativeAPI | null;
   fileId?: string;
   hasExistingScene?: boolean;
-  initialHistory?: { id: string; role: "user" | "assistant"; text: string }[];
+  initialHistory?: unknown[];
+  initialSpec?: DiagramSpec;
   projectId?: string;
   repoGenerationError: string | null;
   repoGenerationJob: RepoGenerationJob | null;
@@ -26,6 +28,7 @@ export function WorkspaceAgentSidebar({
   fileId,
   hasExistingScene,
   initialHistory,
+  initialSpec,
   projectId,
   repoGenerationError,
   repoGenerationJob,
@@ -56,11 +59,13 @@ export function WorkspaceAgentSidebar({
         </button>
       </div>
       <AIChatPanel
+        key={fileId}
         activeFileType={activeFileType}
         excalidrawAPI={activeFileType === "doc" ? null : excalidrawAPI}
         projectId={projectId}
         fileId={fileId}
         initialHistory={initialHistory}
+        initialSpec={initialSpec}
         hasExistingScene={hasExistingScene}
         repoGenerationJob={repoGenerationJob}
         repoGenerationError={repoGenerationError}

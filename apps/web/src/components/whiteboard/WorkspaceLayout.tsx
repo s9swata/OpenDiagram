@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Loader2, X } from "lucide-react";
+import type { DiagramSpec } from "@OpenDiagram/harness";
 import { joinWaitlist } from "@/lib/projects-client";
 import { WorkspaceAgentSidebar } from "./workspace-layout/WorkspaceAgentSidebar";
 import { FirstFileDialog, LeavePromptDialog } from "./workspace-layout/WorkspaceDialogs";
@@ -101,9 +102,13 @@ export function WorkspaceLayout() {
       setWaitlistStatus("error");
     }
   }
-  const activeHistory = state.activeFile?.history as
-    | { id: string; role: "user" | "assistant"; text: string }[]
-    | undefined;
+  const activeHistory = state.activeFile?.history;
+  const activeDiagramSpec =
+    state.activeFile?.type === "diagram" &&
+    state.activeFile.spec &&
+    typeof state.activeFile.spec === "object"
+      ? (state.activeFile.spec as DiagramSpec)
+      : undefined;
   const agentProjectId = state.isSignedIn ? state.activeFile?.projectId : undefined;
   const agentFileId = state.activeFile?.id ?? state.currentFileId ?? undefined;
 
@@ -152,6 +157,7 @@ export function WorkspaceLayout() {
           activeFile={state.activeFile}
           docContent={state.docContent}
           initialScene={state.initialScene}
+          isLoading={state.fileLoading}
           onDocChange={actions.handleDocChange}
           onExcalidrawAPI={actions.handleExcalidrawAPI}
           onSceneChange={actions.handleSceneChange}
@@ -166,6 +172,7 @@ export function WorkspaceLayout() {
           excalidrawAPI={state.excalidrawAPI}
           fileId={agentFileId}
           initialHistory={activeHistory}
+          initialSpec={activeDiagramSpec}
           hasExistingScene={Boolean(
             state.initialScene &&
             typeof state.initialScene === "object" &&
