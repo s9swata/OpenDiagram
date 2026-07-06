@@ -895,7 +895,8 @@ export function useWorkspaceLayoutController() {
     };
   }, []);
 
-  const accountName = session.data?.user?.name || session.data?.user?.email || "Guest workspace";
+  const accountEmail = session.data?.user?.email ?? "";
+  const accountName = session.data?.user?.name || accountEmail || "Guest workspace";
   const hasCurrentProjectSnapshot = storedProjectId === params.projectId;
   const sidebarProjectName = hasCurrentProjectSnapshot ? projectName : "OpenDiagram";
   const sidebarFilesForProject = hasCurrentProjectSnapshot ? sidebarFiles : [];
@@ -906,6 +907,7 @@ export function useWorkspaceLayoutController() {
 
   return {
     state: {
+      accountEmail,
       accountImage: session.data?.user?.image,
       accountName,
       activeFile,

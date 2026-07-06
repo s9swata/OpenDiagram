@@ -4,6 +4,7 @@ import { createMiddleware } from "hono/factory";
 
 export type AuthVariables = EvlogVariables & {
   userId: string;
+  userEmail: string;
 };
 
 /**
@@ -17,5 +18,6 @@ export const requireAuth = createMiddleware<{ Variables: AuthVariables }>(async 
     return c.json({ error: "Unauthorized" }, 401);
   }
   c.set("userId", session.user.id);
+  c.set("userEmail", session.user.email);
   await next();
 });

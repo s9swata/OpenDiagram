@@ -138,6 +138,11 @@ Minimum code that solves the problem. Nothing speculative.
 - No error handling for impossible scenarios.
 - If you write 200 lines and it could be 50, rewrite it.
 
+### Database
+
+- Never write migration files yourself
+- Use bun run db:generate, bun run db:migrate and bun run db:push for executing db operations.
+
 ### Surgical Changes
 
 Touch only what you must. Clean up only your own mess.
