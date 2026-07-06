@@ -20,6 +20,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Progress } from "@/components/ui/progress";
 import { getCreationQuota, type CreationQuota, type SavedProjectFile } from "@/lib/projects-client";
 import type { WorkspaceSidebarFile } from "@/lib/workspace-layout-store";
 import { getInitials } from "./helpers";
@@ -66,6 +67,9 @@ export function WorkspaceSidebar({
   const [quota, setQuota] = useState<CreationQuota | null>(null);
   const [quotaError, setQuotaError] = useState<string | null>(null);
   const [quotaPending, setQuotaPending] = useState(false);
+  const quotaRemainingPercent = quota?.limit
+    ? Math.max(0, Math.min(100, (quota.remaining / quota.limit) * 100))
+    : 0;
 
   async function handleMenuOpen(open: boolean) {
     if (!open) return;
@@ -129,7 +133,7 @@ export function WorkspaceSidebar({
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-64">
             <DropdownMenuGroup>
-              <DropdownMenuLabel className="space-y-1.5 px-2 py-2">
+              <DropdownMenuLabel className="flex flex-col gap-1.5 px-2 py-2">
                 <span className="block text-[12px] font-semibold text-od-ink">Beta quota</span>
                 {quotaPending ? (
                   <span className="block text-[11px] font-normal text-od-ink-faint">
@@ -138,10 +142,17 @@ export function WorkspaceSidebar({
                 ) : quotaError ? (
                   <span className="block text-[11px] font-normal text-red-600">{quotaError}</span>
                 ) : quota ? (
-                  <span className="block text-[11px] font-normal leading-4 text-od-ink-muted">
-                    {quota.remaining} of {quota.limit} beta creation requests left
-                    {quota.actorType === "guest" ? ". Sign in to get 10." : "."}
-                  </span>
+                  <>
+                    <Progress
+                      value={quotaRemainingPercent}
+                      aria-label={`${quota.remaining} of ${quota.limit} beta creation requests left`}
+                      className="h-1.5"
+                    />
+                    <span className="block text-[11px] font-normal leading-4 text-od-ink-muted">
+                      {quota.remaining} of {quota.limit} beta creation requests left
+                      {quota.actorType === "guest" ? ". Sign in to get 10." : "."}
+                    </span>
+                  </>
                 ) : (
                   <span className="block text-[11px] font-normal text-od-ink-faint">
                     Open settings to check usage.

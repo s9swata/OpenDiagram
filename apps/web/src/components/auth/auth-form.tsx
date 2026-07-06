@@ -109,7 +109,13 @@ export function AuthForm({ initialTab }: { initialTab: "signin" | "signup" }) {
           { email: suEmail, password: suPwd, name: `${suFirst} ${suLast}`.trim() },
           {
             onRequest: () => setLoading(true),
-            onSuccess: () => setSuccess(true),
+            onSuccess: () => {
+              setSuccess(true);
+              setTimeout(() => {
+                router.push("/dashboard");
+                router.refresh();
+              }, 500);
+            },
             onError: (ctx) => {
               setLoading(false);
               alert(ctx.error.message || "Failed to create account");
@@ -146,11 +152,7 @@ export function AuthForm({ initialTab }: { initialTab: "signin" | "signup" }) {
                 <IconCheck width={28} height={28} />
               </div>
               <h2>{tab === "signin" ? "Welcome back" : "You're in"}</h2>
-              <p>
-                {tab === "signin"
-                  ? "Redirecting to your dashboard…"
-                  : "Check your inbox to verify your email."}
-              </p>
+              <p>Redirecting to your dashboard…</p>
             </div>
           ) : (
             <>

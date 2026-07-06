@@ -52,7 +52,7 @@ export function Header() {
                 key={item.href}
                 href={item.href}
                 onClick={() => setOpen(false)}
-                className="block rounded-md px-4 py-3 text-sm font-instrument-serif transition-colors hover:bg-neutral-100"
+                className="block rounded-md px-4 py-3 font-inter text-sm transition-colors hover:bg-neutral-100"
               >
                 {item.label}
               </Link>

@@ -204,6 +204,16 @@ projectsRoute.post("/:projectId/chat", async (c) => {
     return c.json({ error: "Not found" }, 404);
   }
 
+  try {
+    const quota = await consumeCreationQuota(await getCreationQuotaActor(c, { userId }));
+    applyCreationQuotaHeaders(c, quota);
+  } catch (error) {
+    if (error instanceof CreationQuotaExceededError) {
+      return creationQuotaExceededResponse(c, error);
+    }
+    throw error;
+  }
+
   let answer: string;
   try {
     answer = await generateGroundedProjectAnswer({
