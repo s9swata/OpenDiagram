@@ -3,7 +3,7 @@
 import { useState, useMemo, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { authClient } from "@/lib/auth-client";
+import { authClient, frontendCallbackURL } from "@/lib/auth-client";
 import { IconMail, IconCheck, IconArrowRight, IconBrandGithubFilled } from "@tabler/icons-react";
 import { Field, PasswordInput, scoreStrength, VisualPane, Checkbox } from "./auth-components";
 
@@ -335,7 +335,12 @@ export function AuthForm({ initialTab }: { initialTab: "signin" | "signup" }) {
                 className="btn btn-github"
                 type="button"
                 onClick={() =>
-                  authClient.signIn.social({ provider: "github", callbackURL: "/dashboard" })
+                  authClient.signIn.social({
+                    provider: "github",
+                    // Must be absolute to the web origin — relative "/dashboard"
+                    // resolves against the API baseURL (BETTER_AUTH_URL).
+                    callbackURL: frontendCallbackURL("/dashboard"),
+                  })
                 }
               >
                 <IconBrandGithubFilled size={16} />
