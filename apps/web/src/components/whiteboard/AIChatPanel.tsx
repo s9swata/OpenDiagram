@@ -239,18 +239,30 @@ export function AIChatPanel({
   }, [diagramError, onCapacityError]);
 
   useEffect(() => {
-    if (!autoDiagramPrompt || !excalidrawAPI || diagramMessages.length > 0) return;
-    // The file already has a generated diagram — don't re-run the prompt.
-    if (hasExistingScene) return;
+    // Seed history from create-project already includes the user prompt — that is
+    // NOT a completed turn. Only skip when an assistant reply exists or the file
+    // already has a rendered scene (reopen).
+    const hasAssistant = diagramMessages.some((message) => message.role === "assistant");
+    if (!autoDiagramPrompt || !excalidrawAPI || hasAssistant || hasExistingScene) return;
 
     const key = `opendiagram:auto-diagram:${projectId ?? "guest"}:${fileId ?? "file"}:${autoDiagramPrompt.id}`;
     if (window.sessionStorage.getItem(key)) return;
 
     window.sessionStorage.setItem(key, "1");
-    void sendMessage({ text: autoDiagramPrompt.text });
+
+    // History was seeded with this user message — replace it (messageId) so we
+    // don't double-append the same prompt before calling /api/diagram/chat.
+    const seedMessage = diagramMessages.find(
+      (message) => message.role === "user" && uiMessageText(message) === autoDiagramPrompt.text,
+    );
+    void sendMessage(
+      seedMessage
+        ? { text: autoDiagramPrompt.text, messageId: seedMessage.id }
+        : { text: autoDiagramPrompt.text },
+    );
   }, [
     autoDiagramPrompt,
-    diagramMessages.length,
+    diagramMessages,
     excalidrawAPI,
     fileId,
     hasExistingScene,
