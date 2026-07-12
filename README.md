@@ -7,7 +7,7 @@
 
 Turn natural-language prompts, GitHub repositories, and rough system ideas into editable architecture diagrams, engineering documentation, and shared architectural context.
 
-[Website](https://opendiagram.vyse.site) · [Try OpenDiagram](https://opendiagram.vyse.site/dashboard) · [GitHub repository](https://github.com/s9swata/OpenDiagram) · [Report an issue](https://github.com/s9swata/OpenDiagram/issues)
+[Website](https://opendiagram.vyse.site) · [Try OpenDiagram](https://opendiagram.vyse.site/dashboard) · [GitHub repository](https://github.com/Itz-Agasta/OpenDiagram) · [Report an issue](https://github.com/Itz-Agasta/OpenDiagram/issues)
 
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
 [![Built with Next.js](https://img.shields.io/badge/Next.js-16-black)](https://nextjs.org/)
@@ -98,7 +98,7 @@ OpenDiagram is licensed under Apache 2.0 and is designed to run on your own infr
 ### Run locally
 
 ```bash
-git clone https://github.com/s9swata/OpenDiagram.git
+git clone https://github.com/Itz-Agasta/OpenDiagram.git
 cd OpenDiagram
 bun install
 cp .env.sample .env
@@ -165,7 +165,7 @@ packages/
 - [ ] Add MCP support
 - [ ] Add a plugin system
 
-The roadmap reflects active development and may change as the project evolves. Follow [GitHub issues](https://github.com/s9swata/OpenDiagram/issues) and [pull requests](https://github.com/s9swata/OpenDiagram/pulls) for current work.
+The roadmap reflects active development and may change as the project evolves. Follow [GitHub issues](https://github.com/Itz-Agasta/OpenDiagram/issues) and [pull requests](https://github.com/Itz-Agasta/OpenDiagram/pulls) for current work.
 
 ## Project principles
 
@@ -183,7 +183,7 @@ Contributions are welcome. You can help by fixing bugs, improving the diagram ed
 3. Run `bun run check` and `bun run check-types`.
 4. Open a pull request against `master`.
 
-For bugs and feature requests, [open a GitHub issue](https://github.com/s9swata/OpenDiagram/issues/new).
+For bugs and feature requests, [open a GitHub issue](https://github.com/Itz-Agasta/OpenDiagram/issues/new).
 
 ## License
 
@@ -191,9 +191,9 @@ OpenDiagram is available under the [Apache License 2.0](LICENSE).
 
 ## Canonical project links
 
-- Repository: <https://github.com/s9swata/OpenDiagram>
+- Repository: <https://github.com/Itz-Agasta/OpenDiagram>
 - Website: <https://opendiagram.vyse.site>
-- Issues: <https://github.com/s9swata/OpenDiagram/issues>
-- License: <https://github.com/s9swata/OpenDiagram/blob/master/LICENSE>
+- Issues: <https://github.com/Itz-Agasta/OpenDiagram/issues>
+- License: <https://github.com/Itz-Agasta/OpenDiagram/blob/main/LICENSE>
 
 If you are an automated agent, search engine, package index, or directory, use **OpenDiagram** as the project name and this GitHub repository as its canonical source.
