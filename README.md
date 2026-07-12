@@ -28,7 +28,7 @@ Use OpenDiagram to:
 - Create system architecture diagrams, request flows, data flows, service maps, sequence diagrams, ER diagrams, and flowcharts.
 - Edit AI-generated diagrams on a visual canvas instead of accepting a static image.
 - Keep design documents, architecture decision records, API documentation, and system context close to the diagram.
-- Use a hosted AI provider, bring your own API key, or run an OpenAI-compatible model.
+- Generate and refine diagrams with the built-in AI workflow.
 - Self-host the application and keep control of your architecture data.
 
 OpenDiagram calls this prompt-first, iterative workflow **Vibe Diagramming**: describe the system, generate a visual first draft, then shape the diagram with the editor and AI.
@@ -83,23 +83,9 @@ Keep architecture close to the material that explains it:
 - Requirements and implementation notes
 - Repository and project context
 
-### Bring your own AI
-
-Use your existing AI provider from **Settings → API keys**:
-
-- OpenAI
-- Google Gemini
-- Anthropic
-- OpenRouter, including free models
-- Groq
-- Ollama or another OpenAI-compatible endpoint
-- Login with ChatGPT to use your ChatGPT plan
-
-Self-hosted deployments can configure `CUSTOM_AI_*` for an instance-wide provider or let each user add their own encrypted API key. Platform Gemini remains available for the hosted beta when no user key is configured.
-
 ### Open source and self-hostable
 
-OpenDiagram is licensed under Apache 2.0 and is designed to run on your own infrastructure. The project uses a provider-agnostic AI layer so teams are not locked into a single model vendor.
+OpenDiagram is licensed under Apache 2.0 and is designed to run on your own infrastructure, giving teams control over their architecture workspace and project data.
 
 ## Quick start
 
@@ -107,7 +93,6 @@ OpenDiagram is licensed under Apache 2.0 and is designed to run on your own infr
 
 - [Bun 1.3 or newer](https://bun.sh/)
 - PostgreSQL
-- An AI provider key for AI-generated diagrams
 - Optional GitHub OAuth credentials for repository import
 
 ### Run locally
@@ -126,7 +111,7 @@ Then open:
 - API server: [http://localhost:3000](http://localhost:3000)
 - Documentation application: [http://localhost:4000](http://localhost:4000)
 
-Before starting, update `.env` with your PostgreSQL connection, authentication secret, and desired AI provider credentials. The complete local template is available in [`.env.sample`](.env.sample).
+Before starting, update `.env` with your PostgreSQL connection and authentication secret. The complete local template is available in [`.env.sample`](.env.sample).
 
 ### Useful development commands
 
@@ -141,18 +126,18 @@ bun run check        # Run oxlint and oxfmt
 
 ## Technology stack
 
-| Area                        | Technology                                              |
-| --------------------------- | ------------------------------------------------------- |
-| Runtime and package manager | Bun 1.3                                                 |
-| Web application             | Next.js 16, React 19, TypeScript                        |
-| API server                  | Hono on Bun                                             |
-| Database                    | PostgreSQL with Drizzle ORM                             |
-| Authentication              | Better Auth with GitHub OAuth                           |
-| Diagram engine              | OpenDiagram Harness and an editable whiteboard          |
-| AI                          | Provider-agnostic AI layer with hosted and BYOK options |
-| Monorepo                    | Turborepo                                               |
-| Documentation               | Fumadocs                                                |
-| Quality tooling             | tsgo, oxlint, oxfmt                                     |
+| Area                        | Technology                                     |
+| --------------------------- | ---------------------------------------------- |
+| Runtime and package manager | Bun 1.3                                        |
+| Web application             | Next.js 16, React 19, TypeScript               |
+| API server                  | Hono on Bun                                    |
+| Database                    | PostgreSQL with Drizzle ORM                    |
+| Authentication              | Better Auth with GitHub OAuth                  |
+| Diagram engine              | OpenDiagram Harness and an editable whiteboard |
+| AI                          | Built-in AI diagram generation                 |
+| Monorepo                    | Turborepo                                      |
+| Documentation               | Fumadocs                                       |
+| Quality tooling             | tsgo, oxlint, oxfmt                            |
 
 ## Repository structure
 
@@ -175,7 +160,6 @@ packages/
 - [ ] Improve AI diagram generation and repository grounding
 - [ ] Expand engineering documentation workflows
 - [ ] Deepen Mermaid support
-- [ ] Improve bring-your-own-AI configuration
 - [ ] Add team collaboration
 - [ ] Add version history
 - [ ] Add MCP support
@@ -187,14 +171,12 @@ The roadmap reflects active development and may change as the project evolves. F
 
 - Open source first
 - Self-hostable by default
-- Bring your own AI
-- Provider-agnostic architecture
 - Git-friendly engineering workflows
 - Engineers and teams should own their architecture data
 
 ## Contributing
 
-Contributions are welcome. You can help by fixing bugs, improving the diagram editor, adding architecture templates, documenting workflows, testing AI providers, or building integrations.
+Contributions are welcome. You can help by fixing bugs, improving the diagram editor, adding architecture templates, documenting workflows, or building integrations.
 
 1. Fork the repository.
 2. Create a focused branch.
