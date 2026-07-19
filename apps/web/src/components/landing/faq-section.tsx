@@ -128,9 +128,9 @@ export function FaqSection() {
           >
             <div className="flex items-center gap-6">
               <img
-                src="https://framerusercontent.com/images/zRVCa2eOgJIf1mJK5PYcBLrYI.png"
+                src="/faq-maintainer.webp"
                 alt=""
-                className="h-20 w-20 rounded-full"
+                className="h-20 w-20 shrink-0 rounded-full object-cover"
               />
               <h3 className="text-2xl font-bold leading-[1.6] -tracking-[0.02em]">
                 Have more questions? Check out our GitHub
