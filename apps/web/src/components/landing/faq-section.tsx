@@ -8,12 +8,12 @@ const faqItems = [
   {
     question: "What is a Vibe Diagram?",
     answer:
-      "A Vibe Diagram is a fast, editable architecture diagram that starts from a prompt or repo and helps your team see how a system should work.",
+      "A Vibe Diagram is living software architecture created through conversation. Describe how a system should work, get an editable visual draft, and refine it with AI as your thinking evolves.",
   },
   {
-    question: "How fast can I create one?",
+    question: "How does vibe diagramming work?",
     answer:
-      "Most first drafts generate in seconds. You can keep shaping the canvas with the editor and AI agent after the first pass.",
+      "Start by describing the system, its constraints, and the behavior you need. OpenDiagram creates a visual first draft that you can shape with the editor and AI agent.",
   },
   {
     question: "Can I start from a GitHub repo?",
@@ -36,9 +36,9 @@ const faqItems = [
       "Yes. You can start creating Vibe Diagrams from the dashboard and save work when you sign in.",
   },
   {
-    question: "Do you support complex repos?",
+    question: "Does a Vibe Diagram replace engineering review?",
     answer:
-      "OpenDiagram is built for real software projects, including larger repos. Generated diagrams are a strong first draft, not a replacement for engineering review.",
+      "No. A Vibe Diagram gives your team an editable starting point for discussion and design. Engineers should review it before treating it as authoritative architecture documentation.",
   },
 ];
 
@@ -128,9 +128,9 @@ export function FaqSection() {
           >
             <div className="flex items-center gap-6">
               <img
-                src="https://framerusercontent.com/images/zRVCa2eOgJIf1mJK5PYcBLrYI.png"
+                src="/faq-maintainer.webp"
                 alt=""
-                className="h-20 w-20 rounded-full"
+                className="h-20 w-20 shrink-0 rounded-full object-cover"
               />
               <h3 className="text-2xl font-bold leading-[1.6] -tracking-[0.02em]">
                 Have more questions? Check out our GitHub

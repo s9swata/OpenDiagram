@@ -26,19 +26,18 @@ export function Footer() {
           <div className="relative z-10 inline-flex max-w-full items-center justify-center gap-6 overflow-hidden rounded-full px-6">
             <span className="h-px w-[69px] bg-white/50" />
             <span className="font-serif text-2xl italic leading-[1.2] text-white">
-              Now in Beta, Built for Vibe Diagrams
+              Open Source · Now in Beta
             </span>
             <span className="h-px w-[69px] bg-white/50" />
           </div>
 
           <h2 className="w-full text-center text-[78px] font-normal leading-[1.15] -tracking-[0.06em] text-white max-md:text-5xl max-sm:text-4xl">
-            Your Ideas, <span className="text-white/70">Vibe Diagrammed</span>
+            Your next system deserves <span className="text-white/70">more than a screenshot.</span>
           </h2>
 
           <div className="flex w-full max-w-[620px] flex-col items-center justify-center gap-2.5 overflow-hidden">
             <p className="text-center text-xl font-normal leading-[1.6] -tracking-[0.02em] text-white/80 max-md:text-xl">
-              Start from a prompt or connect GitHub to generate expressive architecture diagrams you
-              can edit in seconds.
+              Create living architecture you can explain, edit, and evolve with your team.
             </p>
           </div>
 
@@ -76,7 +75,7 @@ export function Footer() {
           </div>
           <div className="flex flex-1 items-center justify-end gap-9 text-base leading-[1.7] text-white max-md:justify-start">
             <a
-              href="https://github.com/s9swata/OpenDiagram"
+              href="https://github.com/Itz-Agasta/OpenDiagram"
               className="transition-colors hover:text-white/70"
             >
               GitHub
