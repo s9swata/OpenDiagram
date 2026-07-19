@@ -5,6 +5,7 @@ import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import "lenis/dist/lenis.css";
 import { Toaster } from "@/components/ui/sonner";
+import { GITHUB_URL, HOME_DESCRIPTION, HOME_TITLE, SITE_NAME, SITE_URL } from "@/lib/site";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -22,9 +23,17 @@ const instrumentSerif = Instrument_Serif({
 });
 
 export const metadata: Metadata = {
-  title: "OpenDiagram",
-  description:
-    "We help open source maintainers generate beautiful, accurate documentation — fast and automatically.",
+  metadataBase: SITE_URL,
+  applicationName: SITE_NAME,
+  title: {
+    default: HOME_TITLE,
+    template: `%s | ${SITE_NAME}`,
+  },
+  description: HOME_DESCRIPTION,
+  authors: [{ name: SITE_NAME, url: GITHUB_URL }],
+  creator: SITE_NAME,
+  publisher: SITE_NAME,
+  category: "technology",
   icons: {
     icon: "/logo_opendiagram.png",
     apple: "/logo_opendiagram.png",
