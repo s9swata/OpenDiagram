@@ -25,11 +25,7 @@ export function SidebarNav({
   return (
     <aside className="hidden md:flex w-[264px] shrink-0 flex-col gap-6 border-r border-od-border-soft bg-od-surface-muted px-4 py-5 backdrop-blur-sm">
       <button className="flex items-center gap-3 rounded-[8px] bg-od-surface px-3 py-2.5 text-left transition hover:bg-white">
-        <img
-          src="/logo_opendiagram.png"
-          alt=""
-          className="h-9 w-9 shrink-0 rounded-[8px] object-contain"
-        />
+        <img src="/new_logo.png" alt="" className="h-9 w-9 shrink-0 rounded-[8px] object-contain" />
         <div className="min-w-0 flex-1">
           <p className="truncate text-[14px] text-od-ink">OpenDiagram</p>
           <p className="truncate text-[12px] text-od-ink-faint">Workspace</p>
@@ -85,7 +81,7 @@ export function SidebarNav({
 
       <div className="flex items-center gap-3 border-t border-od-border-soft pt-4">
         <img
-          src="/logo_opendiagram.png"
+          src="/new_logo.png"
           alt=""
           className="h-9 w-9 shrink-0 rounded-full border border-white object-contain"
         />

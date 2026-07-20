@@ -180,3 +180,16 @@ For multi-step tasks, state a brief plan:
 3. [Step] → verify: [check]
 
 Strong success criteria let you loop independently. Weak criteria ("make it work") require constant clarification.
+
+## SEO Copy Guidelines
+
+All public-facing marketing and editorial copy must follow Google Search's people-first content guidance.
+
+- Write for OpenDiagram's intended users first. SEO supports useful content; it must not determine the copy at the expense of clarity or accuracy.
+- Describe only capabilities that exist or are explicitly labeled as in development. Never invent integrations, customers, metrics, testimonials, workflows, or product maturity.
+- Use clear, descriptive page titles, headings, link labels, metadata, and alt text that accurately summarize the page. Avoid keyword stuffing and repeated near-duplicate phrases.
+- Demonstrate first-hand product knowledge with real workflows, prompts, screenshots, constraints, and design decisions whenever possible.
+- Add original explanation or analysis. Do not mass-produce thin pages, rewrite competing articles, chase unrelated trending queries, or generate pages solely to attract search traffic.
+- Keep each page focused on one useful purpose and ensure a reader can leave with a complete, satisfying answer or next step.
+- Prefer specific, direct language over generic AI copy. Ban filler such as "revolutionize," "unlock," "seamless," "next-generation," "AI-powered," and unsupported superlatives.
+- Review generated copy for factual accuracy, spelling, readability, accessibility, and consistency with the current Vibe Diagram positioning before shipping.

@@ -4,16 +4,16 @@ import { FeatureNav } from "@/components/marketing/feature-nav";
 import { MarketingPage } from "@/components/marketing/marketing-page";
 
 export const metadata: Metadata = {
-  title: "Features — AI Architecture Diagram Workspace",
+  title: "Vibe Diagram Features — Editable System Diagrams",
   description:
-    "Generate editable software architecture diagrams, import GitHub repositories, refine systems with AI, and keep engineering documents beside the canvas.",
+    "Turn a system prompt into an editable Vibe Diagram, refine services and connections on a visual canvas, and explore the open-source OpenDiagram workspace.",
   alternates: { canonical: "/features" },
   openGraph: {
     type: "website",
     url: "/features",
-    title: "OpenDiagram Features",
+    title: "OpenDiagram Vibe Diagram Features",
     description:
-      "From a system prompt or GitHub repository to an editable architecture diagram and connected engineering context.",
+      "Describe a system, generate a Vibe Diagram, and keep refining the visual on an editable canvas.",
     images: [
       {
         url: "/dashboard-od.png",
@@ -31,11 +31,16 @@ const showcaseItems = [
     description:
       "Describe system behavior, scale, constraints, and technologies in plain language. OpenDiagram maps that intent into services and flows.",
     media: {
-      kind: "video" as const,
-      src: "/hero-media/opendiagram-creation-flow-trimmed.webm",
-      fallback: "/hero-media/opendiagram-creation-flow-trimmed.mp4",
-      poster: "/hero-media/opendiagram-creation-flow-poster.jpg",
-      alt: "OpenDiagram demo showing an architecture workspace creation flow",
+      kind: "prompt" as const,
+      src: "/slideshow/diagram_sample.png",
+      alt: "Vibe Diagram showing an AWS publish-subscribe system generated from a written prompt",
+      prompt: "Design a scalable event-driven notification system on AWS.",
+      requirements: [
+        "Accept events from a publisher application",
+        "Fan messages out through an SNS topic",
+        "Support HTTP, queue, and serverless consumers",
+        "Show the main services and message flow",
+      ],
     },
   },
   {
@@ -45,33 +50,37 @@ const showcaseItems = [
     description:
       "Move components, rename services, redraw connections, and add the details the first draft missed. The result is a diagram, not an image.",
     media: {
-      kind: "image" as const,
-      src: "/dashboard-od.png",
-      alt: "OpenDiagram dashboard showing the editable architecture canvas",
+      kind: "video" as const,
+      src: "/hero-media/opendiagram-creation-flow-trimmed.webm",
+      fallback: "/hero-media/opendiagram-creation-flow-trimmed.mp4",
+      poster: "/hero-media/opendiagram-creation-flow-poster.jpg",
+      alt: "OpenDiagram demo showing a Vibe Diagram being created and edited on the canvas",
     },
   },
   {
     id: "context",
-    label: "Keep context close",
-    title: "Diagrams and documents",
+    label: "Map the system",
+    title: "Map services, requests, and data flows",
     description:
-      "Keep system notes, architecture decisions, API context, and implementation guidance in the same project workspace.",
+      "Use Vibe Diagrams to explore service boundaries, request paths, data movement, cloud resources, and the relationships that are hard to explain in prose.",
     media: {
       kind: "image" as const,
       src: "/example-media/collaborative-ai-workspace.jpg",
-      alt: "Collaborative AI architecture workspace diagram in OpenDiagram",
+      alt: "Editable Vibe Diagram showing software services and their data flows in OpenDiagram",
     },
   },
   {
     id: "ownership",
-    label: "Ground and own",
-    title: "GitHub import and open source",
+    label: "Inspect and own",
+    title: "Open source by design",
     description:
-      "Connect GitHub and choose a repository to begin from project structure, then run the Apache 2.0 codebase on infrastructure you control.",
+      "OpenDiagram is available under the Apache 2.0 license. Inspect the implementation, contribute improvements, or run the workspace on infrastructure you control.",
     media: {
       kind: "image" as const,
-      src: "/example-media/collaborative-ai-workspace-before.jpg",
-      alt: "Initial architecture draft generated from a system design prompt",
+      src: "/feature-media/opendiagram-generated-architecture-3x.png",
+      alt: "OpenDiagram open-source architecture connecting the Next.js web app, Hono API, AI providers, PostgreSQL, Better Auth, and diagram engine",
+      width: 2670,
+      height: 1440,
     },
   },
 ];
@@ -101,8 +110,8 @@ export default function FeaturesPage() {
 
           <div className="min-w-0">
             <p className="mb-10 max-w-[560px] text-lg leading-[1.7] text-black/62 md:text-xl">
-              Open Diagram combines AI diagram generation, a visual editor, repository context, and
-              engineering documents in one architecture workspace.
+              OpenDiagram turns a written system idea into an editable Vibe Diagram, then gives you
+              a visual canvas for shaping the services, connections, and flows.
             </p>
 
             <div className="space-y-24 lg:space-y-36">
@@ -126,7 +135,7 @@ export default function FeaturesPage() {
                     </p>
                   </div>
 
-                  <div className="bg-[#eeeaf7] p-3 md:p-6 lg:p-8">
+                  <div>
                     <FeatureMedia media={item.media} />
                   </div>
                 </article>

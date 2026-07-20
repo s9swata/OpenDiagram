@@ -6,6 +6,7 @@ const columns = [
     label: "Product",
     links: [
       ["Features", "/features"],
+      ["How it works", "/#how-it-works"],
       ["GitHub import", "/import/github"],
       ["Dashboard", "/dashboard"],
     ],

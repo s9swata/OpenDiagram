@@ -19,7 +19,7 @@ export function Header() {
           href="/"
           className="inline-flex h-11 items-center justify-center justify-self-start gap-2 overflow-hidden rounded-[22px] bg-white px-4 text-base font-bold"
         >
-          <img src="/logo_opendiagram.png" alt="" className="h-6 w-6 shrink-0 object-contain" />
+          <img src="/new_logo.png" alt="" className="h-6 w-6 shrink-0 object-contain" />
           OpenDiagram
         </Link>
         <nav
