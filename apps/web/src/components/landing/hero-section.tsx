@@ -101,7 +101,7 @@ export function HeroSection() {
     const video = videoRef.current;
     if (!video) return;
 
-    if (shouldReduceMotion !== false) {
+    if (shouldReduceMotion) {
       video.pause();
       video.currentTime = 0;
       video.load();
@@ -219,7 +219,7 @@ export function HeroSection() {
           <video
             ref={videoRef}
             className="aspect-video w-full rounded-lg bg-white object-cover"
-            autoPlay={shouldReduceMotion === false}
+            autoPlay={!shouldReduceMotion}
             loop
             muted
             playsInline
@@ -227,7 +227,7 @@ export function HeroSection() {
             poster="/hero-media/opendiagram-creation-flow-poster.jpg"
             aria-label="Creating and editing a chat app architecture diagram in OpenDiagram"
             onLoadedData={() => {
-              if (shouldReduceMotion === false) {
+              if (!shouldReduceMotion) {
                 void videoRef.current?.play().catch(() => undefined);
               }
             }}
