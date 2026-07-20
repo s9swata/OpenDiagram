@@ -73,7 +73,16 @@ export function Footer() {
             <img src="/logo_opendiagram.png" alt="" className="h-6 w-6 shrink-0 invert" />
             <span className="text-base leading-[1.7] text-white">© Team Vyse, 2026</span>
           </div>
-          <div className="flex flex-1 items-center justify-end gap-9 text-base leading-[1.7] text-white max-md:justify-start">
+          <div className="flex flex-1 flex-wrap items-center justify-end gap-x-9 gap-y-3 text-base leading-[1.7] text-white max-md:justify-start">
+            <Link href="/features" className="transition-colors hover:text-white/70">
+              Features
+            </Link>
+            <Link href="/examples" className="transition-colors hover:text-white/70">
+              Examples
+            </Link>
+            <Link href="/about" className="transition-colors hover:text-white/70">
+              About
+            </Link>
             <a
               href="https://github.com/Itz-Agasta/OpenDiagram"
               className="transition-colors hover:text-white/70"

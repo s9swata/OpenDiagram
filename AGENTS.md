@@ -89,6 +89,14 @@ just reinstall         # clean + bun install
 
 ## AI Coding Guidelines
 
+### Marketing UI Direction
+
+- Avoid generic card-grid layouts as the default way to present marketing content. In particular, do not use repeated equal-sized rounded cards, three-column card rows, or numbered card grids.
+- Do not add decorative hover transitions to non-interactive content containers. Reserve hover, focus, and pressed feedback for elements that actually perform an action.
+- Do not use the now-generic pairing of italic or cursive display text with Inter-style sans-serif body text. Use a cohesive type system, and reserve italics for semantic emphasis rather than as a recurring visual motif.
+- Prefer deliberate asymmetry in marketing layouts: offset columns, varied content widths, uneven media placement, and controlled negative space. Avoid perfectly centered, mirrored, or uniformly repeated section compositions while preserving responsive clarity and accessibility.
+- Treat distinctive art direction as a project requirement. Do not reproduce common AI-generated landing-page patterns simply because they are easy to compose.
+
 ### Think Before Coding
 
 Don't assume. Don't hide confusion. Surface tradeoffs.

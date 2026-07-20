@@ -8,5 +8,21 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "weekly",
       priority: 1,
     },
+    {
+      url: new URL("/about", SITE_URL).href,
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
+    {
+      url: new URL("/features", SITE_URL).href,
+      changeFrequency: "monthly",
+      priority: 0.8,
+    },
+    {
+      url: new URL("/examples", SITE_URL).href,
+      changeFrequency: "monthly",
+      priority: 0.8,
+      images: [new URL("/example-media/collaborative-ai-workspace.jpg", SITE_URL).href],
+    },
   ];
 }

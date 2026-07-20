@@ -4,9 +4,9 @@ import { useState } from "react";
 import Link from "next/link";
 
 const navItems = [
-  { label: "How it Works", href: "#how-it-works" },
-  { label: "About", href: "#about" },
-  { label: "FAQ", href: "#faq" },
+  { label: "Features", href: "/features" },
+  { label: "Examples", href: "/examples" },
+  { label: "About", href: "/about" },
   { label: "GitHub", href: "https://github.com/Itz-Agasta/OpenDiagram" },
 ];
 
