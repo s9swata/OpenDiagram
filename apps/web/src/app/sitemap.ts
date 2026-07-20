@@ -18,11 +18,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly",
       priority: 0.8,
     },
-    {
-      url: new URL("/examples", SITE_URL).href,
-      changeFrequency: "monthly",
-      priority: 0.8,
-      images: [new URL("/example-media/collaborative-ai-workspace.jpg", SITE_URL).href],
-    },
   ];
 }

@@ -5,7 +5,6 @@ import Link from "next/link";
 
 const navItems = [
   { label: "Features", href: "/features" },
-  { label: "Examples", href: "/examples" },
   { label: "About", href: "/about" },
   { label: "GitHub", href: "https://github.com/Itz-Agasta/OpenDiagram" },
 ];
@@ -79,7 +78,7 @@ export function Header() {
                 key={item.href}
                 href={item.href}
                 onClick={() => setOpen(false)}
-                className="block rounded-md px-4 py-3 font-inter text-sm transition-colors hover:bg-neutral-100"
+                className="block rounded-md px-4 py-3 text-sm transition-colors hover:bg-neutral-100"
               >
                 {item.label}
               </Link>

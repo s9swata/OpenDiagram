@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { ButtonShaderTexture } from "@/components/button-shader-texture";
 
 const faqItems = [
   {
@@ -140,9 +139,8 @@ export function FaqSection() {
               <div className="inline-flex w-full items-center gap-6 rounded-[33px] bg-white p-2">
                 <a
                   href="https://github.com/Itz-Agasta/OpenDiagram"
-                  className="relative isolate inline-flex w-full cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-full bg-black px-6 py-3 text-sm font-medium text-white transition-all hover:opacity-90"
+                  className="inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-black px-6 py-3 text-sm font-medium text-white transition-opacity hover:opacity-80 active:translate-y-px"
                 >
-                  <ButtonShaderTexture />
                   Raise an issue
                   <svg
                     width="16"
@@ -160,10 +158,10 @@ export function FaqSection() {
                 </a>
               </div>
               <a
-                href="mailto:hello@opendiagram.dev"
+                href="mailto:support@opendiagram.ink"
                 className="text-base leading-[1.7] underline underline-offset-2 transition-colors hover:text-black/60"
               >
-                Or, email me at hello@opendiagram.dev
+                Or, email us at support@opendiagram.ink
               </a>
             </div>
           </motion.div>

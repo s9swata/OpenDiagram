@@ -210,7 +210,7 @@ export function AuthForm({ initialTab }: { initialTab: "signin" | "signup" }) {
                           data-has-icon="true"
                           value={siEmail}
                           onChange={(e) => setSiEmail(e.target.value)}
-                          placeholder="you@opendiagram.dev"
+                          placeholder="support@opendiagram.ink"
                           autoComplete="email"
                           aria-invalid={!!siErrors.email || undefined}
                         />
@@ -278,7 +278,7 @@ export function AuthForm({ initialTab }: { initialTab: "signin" | "signup" }) {
                           data-has-icon="true"
                           value={suEmail}
                           onChange={(e) => setSuEmail(e.target.value)}
-                          placeholder="you@opendiagram.dev"
+                          placeholder="you@opendiagram.ink"
                           autoComplete="email"
                           aria-invalid={!!suErrors.email || undefined}
                         />

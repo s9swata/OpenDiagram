@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowUpRight, Code2, PencilRuler, ShieldCheck } from "lucide-react";
-import { MarketingPage, PageCta, PageIntro } from "@/components/marketing/marketing-page";
+import { MarketingPage } from "@/components/marketing/marketing-page";
 import { GITHUB_URL } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -20,19 +19,16 @@ export const metadata: Metadata = {
 
 const principles = [
   {
-    icon: PencilRuler,
     title: "Editable from the first draft",
     description:
       "A generated diagram should begin a design conversation, not end it. Every output opens on a canvas where the structure can be reviewed and changed.",
   },
   {
-    icon: ShieldCheck,
     title: "Engineer judgment stays in the loop",
     description:
       "OpenDiagram creates working drafts. Engineers still validate constraints, tradeoffs, failure modes, and the architecture that reaches production.",
   },
   {
-    icon: Code2,
     title: "Open source first",
     description:
       "The code is available under Apache 2.0. Teams can inspect it, contribute to it, and run the workspace on infrastructure they control.",
@@ -41,110 +37,102 @@ const principles = [
 
 export default function AboutPage() {
   return (
-    <MarketingPage>
-      <PageIntro
-        eyebrow="Why OpenDiagram exists"
-        title={
-          <>
-            Architecture should stay <span className="font-serif italic">open to change.</span>
-          </>
-        }
-        description="Software systems evolve after the whiteboard meeting. OpenDiagram keeps the diagram, the reasoning, and the editing surface together so architecture can evolve with the code."
-      />
+    <MarketingPage className="bg-white">
+      <section className="px-6 pb-24 pt-20 md:px-12 md:pb-32 md:pt-28 lg:px-[120px]">
+        <div className="mx-auto grid w-full max-w-[1200px] gap-y-12 lg:grid-cols-12">
+          <p className="font-mono text-xs uppercase tracking-[0.18em] text-black/45 lg:col-span-3 lg:pt-4">
+            Why OpenDiagram exists
+          </p>
+          <h1 className="text-balance text-[56px] font-medium leading-[0.9] -tracking-[0.07em] md:text-[88px] lg:col-span-10 lg:col-start-2 lg:text-[116px]">
+            Architecture should stay{" "}
+            <span className="block pl-[9%] text-[#ff4a2c]">open to change.</span>
+          </h1>
+          <p className="max-w-[650px] text-lg leading-[1.7] text-black/62 md:text-xl lg:col-span-6 lg:col-start-3 lg:mt-6">
+            Software systems evolve after the whiteboard meeting. OpenDiagram keeps the diagram, the
+            reasoning, and the editing surface together so architecture can evolve with the code.
+          </p>
+          <dl className="grid grid-cols-3 gap-5 border-t border-black/20 pt-5 lg:col-span-4 lg:col-start-9 lg:mt-6">
+            <div>
+              <dt className="font-mono text-[10px] uppercase tracking-[0.15em] text-black/40">
+                Status
+              </dt>
+              <dd className="mt-2 text-sm font-semibold">Early</dd>
+            </div>
+            <div>
+              <dt className="font-mono text-[10px] uppercase tracking-[0.15em] text-black/40">
+                License
+              </dt>
+              <dd className="mt-2 text-sm font-semibold">Apache 2.0</dd>
+            </div>
+            <div>
+              <dt className="font-mono text-[10px] uppercase tracking-[0.15em] text-black/40">
+                Source
+              </dt>
+              <dd className="mt-2 text-sm font-semibold">GitHub</dd>
+            </div>
+          </dl>
+        </div>
+      </section>
 
-      <section className="px-6 pb-24 md:px-12 lg:px-[120px]">
-        <div className="mx-auto grid w-full max-w-[1200px] gap-px overflow-hidden rounded-[28px] bg-black/10 lg:grid-cols-[1.1fr_0.9fr]">
-          <div className="bg-white p-8 md:p-14 lg:p-16">
-            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-black/45">
-              The problem
-            </p>
-            <h2 className="mt-6 text-balance text-[38px] font-normal leading-[1.08] -tracking-[0.045em] md:text-[56px]">
-              System knowledge gets scattered across screenshots, repositories, documents, and chat
-              history.
-            </h2>
-          </div>
-          <div className="flex flex-col justify-between gap-16 bg-[#f4f4f4] p-8 md:p-14 lg:p-16">
-            <p className="text-lg leading-[1.75] text-black/65">
+      <section className="px-6 py-20 md:px-12 lg:px-[120px] lg:py-28">
+        <div className="mx-auto grid w-full max-w-[1200px] gap-10 border-y border-black/20 py-10 md:py-14 lg:grid-cols-12 lg:gap-8">
+          <p className="font-mono text-xs uppercase tracking-[0.18em] text-[#ff4a2c] lg:col-span-2">
+            The problem
+          </p>
+          <h2 className="text-balance text-[42px] font-medium leading-[1] -tracking-[0.052em] md:text-[62px] lg:col-span-6">
+            System knowledge gets scattered across screenshots, repositories, documents, and chat
+            history.
+          </h2>
+          <div className="flex flex-col justify-between gap-12 lg:col-span-3 lg:col-start-10">
+            <p className="text-lg leading-[1.75] text-black/60">
               OpenDiagram brings those materials into one architecture workspace. Start from a
               prompt or repository, shape the visual draft, and keep the context close enough for
               the next engineer to understand.
             </p>
             <Link
               href={GITHUB_URL}
-              className="inline-flex w-fit items-center gap-2 border-b border-black pb-1 text-sm font-semibold"
+              className="inline-flex w-fit border-b border-black pb-1 text-sm font-semibold transition-colors hover:text-black/55"
             >
-              Inspect the source on GitHub
-              <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+              Inspect the source on GitHub&nbsp; ↗
             </Link>
           </div>
         </div>
       </section>
 
-      <section className="px-6 py-24 md:px-12 lg:px-[120px]">
+      <section className="px-6 py-24 md:px-12 lg:px-[120px] lg:py-36">
         <div className="mx-auto w-full max-w-[1200px]">
-          <div className="mb-14 max-w-[760px]">
-            <p className="font-serif text-2xl italic">The principles</p>
-            <h2 className="mt-4 text-balance text-[44px] font-normal leading-[1.08] -tracking-[0.05em] md:text-[64px]">
+          <header className="max-w-[820px]">
+            <p className="font-mono text-xs uppercase tracking-[0.18em] text-black/45">
+              The principles
+            </p>
+            <h2 className="mt-8 text-balance text-[46px] font-medium leading-[0.98] -tracking-[0.057em] md:text-[70px]">
               Useful architecture tools should make thinking visible.
             </h2>
-          </div>
-          <div className="grid gap-4 lg:grid-cols-3">
-            {principles.map(({ icon: Icon, title, description }, index) => (
+          </header>
+
+          <div className="mt-24 space-y-20 md:space-y-28">
+            {principles.map((principle, index) => (
               <article
-                key={title}
-                className="flex min-h-[390px] flex-col justify-between rounded-[24px] border border-black/10 bg-white/65 p-8"
+                key={principle.title}
+                className={`grid gap-8 border-t border-black/20 pt-7 md:grid-cols-[0.9fr_1.1fr] ${
+                  index === 0
+                    ? "max-w-[920px]"
+                    : index === 1
+                      ? "ml-auto max-w-[1040px]"
+                      : "ml-[7%] max-w-[860px]"
+                }`}
               >
-                <div className="flex items-start justify-between">
-                  <span className="grid h-12 w-12 place-items-center rounded-full bg-black text-white">
-                    <Icon className="h-5 w-5" aria-hidden="true" />
-                  </span>
-                  <span className="font-serif text-xl italic text-black/35">0{index + 1}</span>
-                </div>
-                <div>
-                  <h3 className="text-2xl font-semibold -tracking-[0.025em]">{title}</h3>
-                  <p className="mt-4 leading-[1.75] text-black/60">{description}</p>
-                </div>
+                <h3 className="text-balance text-[32px] font-semibold leading-[1.06] -tracking-[0.04em] md:text-[44px]">
+                  {principle.title}
+                </h3>
+                <p className="max-w-[520px] text-lg leading-[1.75] text-black/58 md:pt-1">
+                  {principle.description}
+                </p>
               </article>
             ))}
           </div>
         </div>
       </section>
-
-      <section className="px-6 py-24 md:px-12 lg:px-[120px]">
-        <div className="mx-auto grid w-full max-w-[1200px] gap-12 border-y border-black/15 py-16 md:grid-cols-[0.8fr_1.2fr]">
-          <p className="font-serif text-2xl italic">Built in public</p>
-          <div>
-            <h2 className="text-balance text-[42px] font-normal leading-[1.08] -tracking-[0.05em] md:text-[60px]">
-              The roadmap is visible because the work is still moving.
-            </h2>
-            <p className="mt-6 max-w-[700px] text-lg leading-[1.75] text-black/60">
-              OpenDiagram is in early development. Diagram generation works today, while deeper
-              repository grounding, documentation workflows, collaboration, and version history
-              continue to evolve in the open.
-            </p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Link
-                href={`${GITHUB_URL}/issues`}
-                className="rounded-full border border-black/15 bg-white/60 px-5 py-3 text-sm font-semibold transition-colors hover:bg-white"
-              >
-                Follow the issues
-              </Link>
-              <Link
-                href={`${GITHUB_URL}/blob/main/LICENSE`}
-                className="rounded-full border border-black/15 px-5 py-3 text-sm font-semibold transition-colors hover:bg-white/50"
-              >
-                Read the Apache 2.0 license
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <PageCta
-        eyebrow="Make the thinking visible"
-        title="Turn a system idea into something your team can inspect."
-        description="Describe the behavior and constraints. OpenDiagram gives you an editable architecture draft to review and refine."
-      />
     </MarketingPage>
   );
 }
