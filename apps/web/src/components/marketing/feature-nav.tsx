@@ -38,7 +38,7 @@ export function FeatureNav({ items }: { items: FeatureNavItem[] }) {
             className={`flex min-w-[220px] items-center gap-3 px-4 py-4 text-sm font-semibold transition-colors lg:min-w-0 ${
               isActive
                 ? "bg-black text-white"
-                : "border-b border-black/10 text-black/48 hover:text-black"
+                : "border-b border-black/10 text-black/65 hover:text-black"
             }`}
           >
             <span

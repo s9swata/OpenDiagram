@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useRef } from "react";
+import { useReducedMotion } from "motion/react";
 
 type FeatureMediaProps =
   | {
@@ -22,11 +23,21 @@ type FeatureMediaProps =
 
 export function FeatureMedia({ media }: { media: FeatureMediaProps }) {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const shouldReduceMotion = useReducedMotion();
+
   useEffect(() => {
     if (media.kind !== "video" || !videoRef.current) return;
     const video = videoRef.current;
+
+    if (shouldReduceMotion !== false) {
+      video.pause();
+      video.currentTime = 0;
+      video.load();
+      return;
+    }
+
     void video.play().catch(() => undefined);
-  }, [media]);
+  }, [media, shouldReduceMotion]);
 
   if (media.kind === "prompt") {
     return (
@@ -63,7 +74,7 @@ export function FeatureMedia({ media }: { media: FeatureMediaProps }) {
       <video
         ref={videoRef}
         className="aspect-video w-full rounded-[18px] bg-[#1d1d1b] object-cover shadow-[0_2px_4px_rgba(25,25,24,0.08),0_22px_46px_-20px_rgba(25,25,24,0.28),18px_34px_72px_-38px_rgba(25,25,24,0.3)] ring-1 ring-[rgba(25,25,24,0.06)]"
-        autoPlay
+        autoPlay={shouldReduceMotion === false}
         loop
         muted
         playsInline

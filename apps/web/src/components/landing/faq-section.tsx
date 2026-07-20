@@ -139,7 +139,7 @@ export function FaqSection() {
               <div className="inline-flex w-full items-center gap-6 rounded-[33px] bg-white p-2">
                 <a
                   href="https://github.com/Itz-Agasta/OpenDiagram"
-                  className="inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-black px-6 py-3 text-sm font-medium text-white transition-opacity hover:opacity-80 active:translate-y-px"
+                  className="inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-black px-6 py-3 text-sm font-medium text-white transition-[opacity,transform] hover:opacity-80 active:translate-y-px"
                 >
                   Raise an issue
                   <svg

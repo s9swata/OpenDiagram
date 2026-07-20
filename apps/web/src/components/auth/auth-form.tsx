@@ -210,7 +210,7 @@ export function AuthForm({ initialTab }: { initialTab: "signin" | "signup" }) {
                           data-has-icon="true"
                           value={siEmail}
                           onChange={(e) => setSiEmail(e.target.value)}
-                          placeholder="support@opendiagram.ink"
+                          placeholder="you@opendiagram.ink"
                           autoComplete="email"
                           aria-invalid={!!siErrors.email || undefined}
                         />
