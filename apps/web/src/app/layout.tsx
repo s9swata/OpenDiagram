@@ -35,8 +35,8 @@ export const metadata: Metadata = {
   publisher: SITE_NAME,
   category: "technology",
   icons: {
-    icon: "/logo_opendiagram.png",
-    apple: "/logo_opendiagram.png",
+    icon: "/new_logo.png",
+    apple: "/new_logo.png",
   },
 };
 

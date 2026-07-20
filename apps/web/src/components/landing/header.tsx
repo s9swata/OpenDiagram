@@ -4,9 +4,8 @@ import { useState } from "react";
 import Link from "next/link";
 
 const navItems = [
-  { label: "How it Works", href: "#how-it-works" },
-  { label: "About", href: "#about" },
-  { label: "FAQ", href: "#faq" },
+  { label: "Features", href: "/features" },
+  { label: "About", href: "/about" },
   { label: "GitHub", href: "https://github.com/Itz-Agasta/OpenDiagram" },
 ];
 
@@ -20,7 +19,7 @@ export function Header() {
           href="/"
           className="inline-flex h-11 items-center justify-center justify-self-start gap-2 overflow-hidden rounded-[22px] bg-white px-4 text-base font-bold"
         >
-          <img src="/logo_opendiagram.png" alt="" className="h-6 w-6 shrink-0 object-contain" />
+          <img src="/new_logo.png" alt="" className="h-6 w-6 shrink-0 object-contain" />
           OpenDiagram
         </Link>
         <nav
@@ -79,7 +78,7 @@ export function Header() {
                 key={item.href}
                 href={item.href}
                 onClick={() => setOpen(false)}
-                className="block rounded-md px-4 py-3 font-inter text-sm transition-colors hover:bg-neutral-100"
+                className="block rounded-md px-4 py-3 text-sm transition-colors hover:bg-neutral-100"
               >
                 {item.label}
               </Link>

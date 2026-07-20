@@ -9,6 +9,5 @@ export default function robots(): MetadataRoute.Robots {
       disallow: "/api/",
     },
     sitemap: new URL("/sitemap.xml", SITE_URL).href,
-    host: SITE_URL.origin,
   };
 }

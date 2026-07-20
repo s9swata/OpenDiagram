@@ -860,14 +860,14 @@ export default function DashboardPage() {
           <header className="z-20 flex h-16 shrink-0 items-center justify-between gap-4 border-b border-od-border-soft bg-od-surface px-4 md:px-8">
             <div className="flex min-w-0 items-center gap-3">
               <img
-                src="/logo_opendiagram.png"
+                src="/new_logo.png"
                 alt=""
                 className="h-9 w-9 shrink-0 rounded-[8px] object-contain lg:hidden"
               />
               <div className="min-w-0">
                 <h1 className="flex items-center gap-2 truncate text-[18px] font-semibold leading-tight md:text-[20px]">
                   <img
-                    src="/logo_opendiagram.png"
+                    src="/new_logo.png"
                     alt=""
                     className="hidden h-7 w-7 shrink-0 object-contain lg:block"
                   />

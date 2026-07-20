@@ -94,6 +94,25 @@ const avatarImages = [
 
 export function HeroSection() {
   const sectionRef = useRef<HTMLElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const shouldReduceMotion = useReducedMotion();
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    if (shouldReduceMotion !== false) {
+      video.pause();
+      video.currentTime = 0;
+      video.load();
+      return;
+    }
+
+    video.defaultMuted = true;
+    video.muted = true;
+
+    void video.play().catch(() => undefined);
+  }, [shouldReduceMotion]);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -197,11 +216,25 @@ export function HeroSection() {
         </div>
 
         <div className="hero-copy mt-12 w-full max-w-[1200px] overflow-hidden rounded-lg border border-black/10 shadow-2xl">
-          <img
-            src="/dashboard-od.png"
-            alt="OpenDiagram workspace for editing a software architecture Vibe Diagram"
-            className="w-full object-cover rounded-lg"
-          />
+          <video
+            ref={videoRef}
+            className="aspect-video w-full rounded-lg bg-white object-cover"
+            autoPlay={shouldReduceMotion === false}
+            loop
+            muted
+            playsInline
+            preload="auto"
+            poster="/hero-media/opendiagram-creation-flow-poster.jpg"
+            aria-label="Creating and editing a chat app architecture diagram in OpenDiagram"
+            onLoadedData={() => {
+              if (shouldReduceMotion === false) {
+                void videoRef.current?.play().catch(() => undefined);
+              }
+            }}
+          >
+            <source src="/hero-media/opendiagram-creation-flow-trimmed.webm" type="video/webm" />
+            <source src="/hero-media/opendiagram-creation-flow-trimmed.mp4" type="video/mp4" />
+          </video>
         </div>
       </div>
     </section>

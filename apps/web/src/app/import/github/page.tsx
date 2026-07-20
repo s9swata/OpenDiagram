@@ -5,7 +5,6 @@ import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { GithubLogoIcon } from "@phosphor-icons/react";
 import { ArrowLeft, Check, GitBranch, Loader2, Lock, Search } from "lucide-react";
-import { ButtonShaderTexture } from "@/components/button-shader-texture";
 import { authClient, frontendCallbackURL } from "@/lib/auth-client";
 import {
   importGitHubRepositoryStream,
@@ -183,9 +182,8 @@ function GitHubImportContent() {
           </Link>
           <Link
             href="/dashboard"
-            className="relative isolate overflow-hidden rounded-full bg-od-ink px-4 py-2 text-[14px] text-od-on-dark transition hover:bg-[#2a2a2a]"
+            className="rounded-full bg-od-ink px-4 py-2 text-[14px] text-od-on-dark transition hover:bg-[#2a2a2a] active:translate-y-px"
           >
-            <ButtonShaderTexture />
             Open dashboard
           </Link>
         </header>
@@ -307,9 +305,8 @@ function ConnectPanel({
         type="button"
         onClick={onConnect}
         disabled={authPending}
-        className="relative isolate inline-flex items-center justify-center gap-2 overflow-hidden rounded-full bg-od-ink px-5 py-3 text-[14px] text-od-on-dark transition hover:bg-[#2a2a2a] disabled:cursor-wait disabled:opacity-70"
+        className="inline-flex items-center justify-center gap-2 rounded-full bg-od-ink px-5 py-3 text-[14px] text-od-on-dark transition hover:bg-[#2a2a2a] active:translate-y-px disabled:cursor-wait disabled:opacity-70"
       >
-        <ButtonShaderTexture />
         <GithubLogoIcon size={16} weight="regular" />
         {authPending ? "Opening GitHub..." : "Continue with GitHub"}
       </button>
@@ -524,9 +521,8 @@ function DonePanel({ project }: { project: ImportedGitHubProject }) {
       </div>
       <Link
         href={`/project/${project.id}/workspace`}
-        className="relative isolate overflow-hidden rounded-full bg-od-ink px-5 py-3 text-[14px] text-od-on-dark transition hover:bg-[#2a2a2a]"
+        className="rounded-full bg-od-ink px-5 py-3 text-[14px] text-od-on-dark transition hover:bg-[#2a2a2a] active:translate-y-px"
       >
-        <ButtonShaderTexture />
         Open workspace
       </Link>
     </div>

@@ -1,290 +1,147 @@
 ---
-version: "alpha"
-name: OpenDiagram
-description: "A calm, editorial AI workspace for turning software architecture into diagrams, docs, and decisions."
+version: "beta"
+name: OpenDiagram — Vibe Diagram
+description: "A playful, direct visual workspace for turning an idea into an editable Vibe Diagram."
 colors:
-  primary: "#1A1A1A"
-  secondary: "#737373"
-  tertiary: "#0CB300"
-  neutral: "#D9D9D9"
-  background: "#D9D9D9"
+  canvas: "#D9D9D9"
   surface: "#FFFFFF"
-  surface-muted: "rgba(255,255,255,0.50)"
-  surface-elevated: "rgba(255,255,255,0.80)"
   ink: "#1A1A1A"
-  ink-muted: "rgba(0,0,0,0.70)"
-  ink-faint: "rgba(0,0,0,0.50)"
+  ink-muted: "rgba(0,0,0,0.68)"
+  ink-faint: "rgba(0,0,0,0.46)"
   dark-surface: "#18181B"
-  dark-panel: "#262626"
   on-dark: "#FFFFFF"
-  on-dark-muted: "rgba(255,255,255,0.80)"
-  border-soft: "rgba(0,0,0,0.10)"
-  border-dark: "rgba(255,255,255,0.50)"
-typography:
-  display-xl:
-    fontFamily: "Inter"
-    fontSize: "78px"
-    fontWeight: "400"
-    lineHeight: "1.15"
-    letterSpacing: "-0.06em"
-  display-lg:
-    fontFamily: "Inter"
-    fontSize: "48px"
-    fontWeight: "700"
-    lineHeight: "1.4"
-    letterSpacing: "-0.04em"
-  body-lg:
-    fontFamily: "Inter"
-    fontSize: "24px"
-    fontWeight: "400"
-    lineHeight: "1.6"
-    letterSpacing: "-0.02em"
-  body-md:
-    fontFamily: "Inter"
-    fontSize: "16px"
-    fontWeight: "400"
-    lineHeight: "1.7"
-    letterSpacing: "0em"
-  label-md:
-    fontFamily: "Inter"
-    fontSize: "14px"
-    fontWeight: "500"
-    lineHeight: "1.4"
-    letterSpacing: "0em"
-  editorial-label:
-    fontFamily: "Instrument Serif"
-    fontSize: "24px"
-    fontWeight: "400"
-    lineHeight: "1.2"
-    letterSpacing: "0em"
-    fontFeature: "italic"
-rounded:
-  sm: "6px"
-  md: "8px"
-  lg: "16px"
-  xl: "24px"
-  pill: "999px"
-  hero-media: "36px"
-spacing:
-  xs: "4px"
-  sm: "8px"
-  md: "16px"
-  lg: "24px"
-  xl: "36px"
-  section: "120px"
-  section-mobile: "64px"
-  page-x: "120px"
-  page-x-mobile: "24px"
-components:
-  button-primary:
-    backgroundColor: "{colors.primary}"
-    textColor: "{colors.on-dark}"
-    typography: "{typography.label-md}"
-    rounded: "{rounded.pill}"
-    padding: "12px 24px"
-  button-primary-hover:
-    backgroundColor: "#2A2A2A"
-  button-inverse:
-    backgroundColor: "{colors.surface}"
-    textColor: "{colors.primary}"
-    typography: "{typography.label-md}"
-    rounded: "{rounded.pill}"
-    padding: "12px 24px"
-  header-brand:
-    backgroundColor: "{colors.surface}"
-    textColor: "{colors.primary}"
-    typography: "{typography.body-md}"
-    rounded: "{rounded.pill}"
-    padding: "0 24px"
-    height: "44px"
-  page-shell:
-    backgroundColor: "{colors.neutral}"
-    textColor: "{colors.ink}"
-  body-copy:
-    textColor: "{colors.ink-muted}"
-    typography: "{typography.body-md}"
-  muted-label:
-    textColor: "{colors.ink-faint}"
-    typography: "{typography.label-md}"
-  menu-card:
-    backgroundColor: "{colors.surface}"
-    textColor: "{colors.primary}"
-    rounded: "{rounded.md}"
-    padding: "8px"
-    width: "30vw"
-  translucent-card:
-    backgroundColor: "{colors.surface-muted}"
-    textColor: "{colors.primary}"
-    rounded: "{rounded.lg}"
-    padding: "40px"
-  process-card:
-    backgroundColor: "{colors.surface-elevated}"
-    textColor: "{colors.primary}"
-    rounded: "{rounded.lg}"
-    padding: "32px"
-  section-divider:
-    backgroundColor: "{colors.border-soft}"
-    height: "1px"
-  dark-feature-panel:
-    backgroundColor: "{colors.dark-panel}"
-    textColor: "{colors.on-dark}"
-    rounded: "{rounded.lg}"
-    padding: "48px"
-  footer-panel:
-    backgroundColor: "{colors.dark-surface}"
-    textColor: "{colors.on-dark-muted}"
-    rounded: "{rounded.xl}"
-    padding: "80px"
-  footer-divider:
-    backgroundColor: "{colors.border-dark}"
-    height: "1px"
+  accent: "#FF4A2C"
 ---
 
-# Design System: OpenDiagram
+# Design System: OpenDiagram — Vibe Diagram
 
-## Overview
+## Brand idea
 
-OpenDiagram should feel like a quiet architecture studio for open-source maintainers: matte, editorial, technical, and calm. The interface pairs a soft warm-gray canvas with white tactile pills, black ink typography, oversized diagram-like composition, and occasional kinetic WebGL light. The brand is not a generic SaaS dashboard. It is a visual workspace that makes complex repositories feel inspectable and understandable.
+OpenDiagram is the home of the Vibe Diagram: a fast, visual way to turn a rough product or system idea into an editable map. Marketing must lead with creative momentum, conversation, iteration, and the feeling of seeing an idea take shape. It should not position the product primarily as an open-source project, an AI architecture generator, a repository-analysis tool, or formal engineering documentation software.
 
-Atmosphere scale:
+The phrase **Vibe Diagram** is the primary category and should appear prominently in headlines, navigation, calls to action, examples, metadata, and product education. OpenDiagram is the product name; Vibe Diagram is the thing people make.
 
-- Density: 4/10, airy landing-page rhythm with large pauses between ideas.
-- Variance: 7/10, centered editorial moments are allowed, but sections should include rotated cards, offset annotations, inline media, and asymmetric pacing.
-- Motion: 6/10, continuous but quiet motion for background light, media loops, ticker strips, and scroll reveals.
+Preferred promise: describe the idea, see the map, shape it together.
 
-Primary product promise: make software architecture legible. Design choices should support clarity, confidence, and craft instead of hype.
+Avoid institutional language such as “architecture infrastructure,” “AI-powered diagram generation,” “enterprise architecture,” and “open-source architecture workspace” unless a technical page genuinely requires it.
 
-## Colors
+## Visual atmosphere
 
-The palette is intentionally neutral and restrained. Use the warm gray canvas as the dominant atmosphere, white for interactive objects, near-black for decisions and CTAs, and one restrained green accent for live/available states.
+The brand should feel like a sharp creative tool: tactile, spacious, playful, and immediately understandable. Think design studio wall, whiteboard session, and polished product demo rather than developer documentation or an admin dashboard.
 
-- **Warm Gray Canvas (#D9D9D9):** page background, footer frame, and overall atmospheric base. Avoid pure white full-page backgrounds.
-- **Paper Surface (#FFFFFF):** header brand pill, menu card, CTA shells, process cards, and annotation chips.
-- **Soft Paper Surface (rgba(255,255,255,0.50)):** translucent cards and frosted support panels.
-- **Elevated Paper Surface (rgba(255,255,255,0.80)):** process cards and foreground surfaces that need stronger separation.
-- **Charcoal Ink (#1A1A1A):** primary text, primary buttons, line art, icon strokes, and high-confidence actions.
-- **Muted Ink (rgba(0,0,0,0.70)):** body copy, explanations, FAQ answers.
-- **Faint Ink (rgba(0,0,0,0.50)):** secondary words, section divider lines, metadata, and quiet contrast.
-- **Dark Panel (#262626):** portfolio/media sections and dark image wells.
-- **Footer Black (#18181B):** footer background and high-contrast closing sections.
-- **Live Green (#0CB300):** the only product accent. Use sparingly for availability dots, success states, and live status. Do not use it as a large brand wash.
+- Density: 4/10 — airy, with room for product media and short statements.
+- Variance: 8/10 — asymmetric compositions, offset columns, deliberate empty space.
+- Motion: 5/10 — quiet product loops and restrained transitions.
+- Tone: confident and conversational, never corporate or breathless.
 
-Do not introduce purple-blue AI gradients, neon glows, or multiple competing accents. Small chip icon colors can be playful, but they must remain local decorative tags and never become the global palette.
+Marketing layouts should make the product itself the visual proof. Prefer real Vibe Diagram canvases, recorded editing flows, and before/after transformations over abstract AI illustrations.
+
+## Color system
+
+Use a restrained neutral palette. Large color washes are not part of the OpenDiagram identity.
+
+- **Warm Gray Canvas (#D9D9D9):** default marketing atmosphere and page framing.
+- **Paper White (#FFFFFF):** content surfaces, media backgrounds, and light pages.
+- **Charcoal Ink (#1A1A1A):** primary text, primary buttons, footer, and high-confidence controls.
+- **Muted Ink (rgba(0,0,0,0.68)):** body copy and supporting explanations.
+- **Faint Ink (rgba(0,0,0,0.46)):** labels, metadata, dividers, and inactive navigation.
+- **Vibe Coral Footer (#FF4A2C):** global footer background and the strongest brand field. Keep the rest of the page neutral so the footer remains the single saturated moment.
+- **Vibe Coral (#FF4A2C):** the only brand accent, taken from the animated connectors in “How Vibe Diagramming Works.” Use it for Vibe Diagram highlights, active creative cues, connector-like rules, and selected calls to action.
+
+Do not introduce blue or purple AI gradients, neon glows, multiple competing accents, or unrelated saturated backgrounds. The footer is the intentional exception: it may use the Vibe Coral field. Local diagram nodes may use varied colors when those colors explain the diagram; they do not become global brand colors.
 
 ## Typography
 
-Typography is the core of the brand. Use Inter for product clarity and Instrument Serif Italic for editorial labels and human punctuation.
+Use **Instrument Sans** for marketing pages and product-facing brand communication. It is direct, modern, and less generic than the old Inter-plus-cursive treatment. Use the configured monospace font for compact labels and technical metadata.
 
-- **Display:** Inter, 78px desktop, 48px tablet, 36px mobile, weight 400, line-height 1.15, letter-spacing -0.06em. Use for hero and footer statements.
-- **Section Heading:** Inter, 48px desktop, 30px mobile, weight 700, line-height 1.4, letter-spacing -0.04em.
-- **Body:** Inter, 16px, line-height 1.7. Keep paragraphs under 65 characters where possible.
-- **Large Body:** Inter, 24px, line-height 1.6, letter-spacing -0.02em. Use only for short high-value claims.
-- **Labels and Buttons:** Inter, 14px, weight 500, compact but readable.
-- **Editorial Labels:** Instrument Serif Italic, 24px, line-height 1.2. Use for section eyebrow phrases such as "FAQ", "Hello!", and "See Recent Work".
+- Display: Instrument Sans, weight 500, tight tracking, sentence case.
+- Section heading: Instrument Sans, weight 500–600, sentence case.
+- Body: Instrument Sans, minimum 16px, line-height 1.6–1.75, maximum 65 characters per line.
+- Labels: monospace, 11–12px, uppercase, restrained tracking.
+- Buttons: Instrument Sans, 14–16px, weight 600.
 
-Never use generic serif fallbacks as a visible design choice. If Instrument Serif is unavailable, fall back quietly to the configured serif stack, but do not design new screens around Times, Georgia, Garamond, or Palatino.
+Do not pair an italic cursive or editorial serif with ordinary sans text as a recurring motif. Do not use giant type merely to fill space; large headlines must remain readable and should carry a specific Vibe Diagram promise.
+
+## Marketing copy
+
+Lead with outcomes that are visible in the product:
+
+- “Create your Vibe Diagram.”
+- “Describe the idea. Shape the map.”
+- “From a rough thought to an editable visual.”
+- “A diagram that keeps up with the conversation.”
+
+Use short, concrete sentences. Describe actions: prompt, map, move, connect, edit, share, refine. Avoid generic AI language such as “unlock,” “revolutionize,” “seamless,” “next-generation,” “supercharge,” and “AI-powered.”
+
+Open source, GitHub import, repository context, and engineering documentation are supporting capabilities. They must not dominate the homepage identity or define the overall visual language.
 
 ## Layout
 
-Use large, centered max-width containers with generous horizontal padding and clean stacking. The design should feel like a long-form editorial website, not an admin dashboard.
-
-- Page gutters: 120px desktop, 24px mobile.
-- Primary max width: 1440px.
-- Secondary max width: 1366px for centered story sections.
-- Hero top spacing: 180px desktop, 120px mobile.
-- Section spacing: 120px desktop, 64px mobile.
-- Mobile collapse: every horizontal layout must collapse below 768px.
-- Avoid horizontal overflow on mobile. Decorative rotated chips and large arrows should hide or simplify below tablet widths.
-- Prefer CSS grid or simple flex stacks. Do not use brittle percentage math unless matching an intentional media ticker.
-
-Composition patterns:
-
-- Hero uses inline media as typography. Small animated image blocks and logo tickers sit between words at headline height.
-- Process cards use slight rotation and vertical offsets to imply hand-assembled architecture notes.
-- FAQ uses a split composition: a rotated contact card beside a clean accordion list.
-- Footer uses a dark rounded slab inset from the viewport, framed by the warm-gray canvas.
-
-## Elevation & Depth
-
-Depth should be tactile but quiet. Avoid glassmorphism as a default style; use translucency only when it helps a moving or dark background remain readable.
-
-- White pills: no visible shadow unless floating over complex content.
-- Process cards: subtle shadow, translucent white fill, optional backdrop blur.
-- Menu card: white fill, 1px soft border, rounded-md, soft shadow, z-index above content.
-- Dark media panel: no heavy shadow; rely on large rounded shape and contrast against the gray canvas.
-- Footer: rounded black slab with thick warm-gray border to feel embedded into the page.
-
-Never use neon outer glows. Never use heavy drop shadows that make surfaces feel like generic templates.
-
-## Shapes
-
-OpenDiagram is softly rounded and tactile, but not childish.
-
-- Marketing and editorial buttons: rounded pill, 999px radius.
-- Dashboard command buttons: rounded-md, 8px radius.
-- Small controls: rounded pill, 999px radius when circular or input-like.
-- Dropdown/menu cards: rounded-md, 8px radius.
-- Content cards: rounded-2xl, 16px radius.
-- Footer slab: 24px radius.
-- Inline hero media: 36px radius with black border.
-- Avatars: circular with 1px white border.
-
-Use rounded forms to imply approachability; use black line art and tight typography to preserve technical authority.
+- Use asymmetric 30/70, 40/60, or offset 12-column compositions.
+- Keep hero copy left aligned. Centered hero layouts are not the default.
+- Use large, rounded product media as evidence, placed beside or below concise copy.
+- Prefer sticky navigation rails, editorial dividers, and staggered content over repeated equal cards.
+- Keep a maximum content width of 1200–1400px with 120px desktop gutters and 24px mobile gutters.
+- Collapse to a single column below 768px with no horizontal page overflow.
+- Every interactive target must be at least 44px high on touch screens.
 
 ## Components
 
-**Header**
+### Buttons
 
-The header is minimal: a white brand pill on the left and a circular menu button on the right. Brand text is bold. The menu icon must transition into a cross when open. The dropdown is an absolute-positioned `30vw` card aligned to the right of the nav container, with a minimum width of 200px, 8px internal padding, rounded-md corners, and enough top margin to avoid touching the button.
+Buttons are flat, solid, and quiet:
 
-**Buttons**
+- Primary: Charcoal Ink background, white text, pill or 8–12px radius depending on context.
+- Inverse: white background, Charcoal Ink text.
+- Secondary: transparent or white with a 1px neutral border.
+- Hover: subtle opacity or background-color change.
+- Active: translate down by 1px.
+- Focus: visible high-contrast outline.
 
-Primary marketing buttons are black pills with white text, 12px vertical padding, 24px horizontal padding, and a small arrow icon when navigating forward. Hover should reduce opacity or slightly deepen the fill. Active state can translate down by 1px. Do not add glow.
+Never place animated noise, grain, shader textures, moving pixels, gradients, glows, or decorative canvases inside buttons. A button should remain legible before JavaScript loads and should not require GPU work.
 
-Dashboard command buttons use rounded-md corners, 8px radius, with compact 44px heights. This keeps app controls precise and closer to Linear/Cursor-style product chrome while maintaining the minimum touch target size. Do not use pill buttons for dashboard actions unless the control is input-like, circular, or intentionally separate from command surfaces.
+### Feature presentations
 
-**Hero Inline Media**
+Do not use generic equal card grids. Present features as an anchored editorial rail with large product media, an asymmetric sequence, or a before/after flow. Non-interactive containers do not lift, scale, or glow on hover.
 
-Inline hero media blocks are part of the headline, not decorative afterthoughts. They should match the optical height of nearby words, use black borders, and rotate slightly (-2deg or +2deg). On mobile, they may shrink but must not overlap text.
+### Media
 
-**Cards and Chips**
+Product videos autoplay muted, loop, play inline, omit browser controls, and use a rounded crop. Where a clean loop matters, edit the media asset rather than seeking with JavaScript. Images must be real OpenDiagram output whenever possible.
 
-Cards are soft white notes with 24px to 32px padding. Rotations should be small and purposeful, usually between -5deg and +9deg. Chips are small white pills with compact icon circles and can use local decorative colors. Hide dense decorative chips on mobile.
+### Footer
 
-**Accordions**
+The footer is a full-width Charcoal field with an oversized low-contrast OpenDiagram wordmark, a centered logo tile, concise Vibe Diagram positioning, and only verified navigation destinations. Do not add placeholder links or routes that do not exist.
 
-FAQ accordions use border-bottom dividers, bold questions, muted answers, and a rotating chevron. Opening animation should affect height and opacity only.
+## Motion
 
-**Dark Panels**
+Motion should clarify product behavior. Use product video, opacity, and transform-based transitions. Keep durations between 180ms and 500ms for interaction feedback. Avoid perpetual decorative motion, shader noise, parallax for its own sake, and animations that delay reading or clicking.
 
-Dark panels use #262626 or #18181B, rounded corners, white text, and moving media. Text over dark surfaces should use white at 70-100% opacity.
+Respect `prefers-reduced-motion`. Never animate layout dimensions when transform or opacity can communicate the same change.
 
-**Background Effects**
+## Accessibility and responsive behavior
 
-The background may include subtle paper grain and low-opacity WebGL god rays. These effects must be pointer-events-none, fixed or absolute behind content, and must never reduce text contrast.
+- Maintain WCAG AA contrast for text and controls.
+- Preserve visible focus states.
+- Use semantic headings and navigation landmarks.
+- Never rely on color alone to communicate state.
+- Avoid horizontal overflow on mobile.
+- Keep body text at least 16px on marketing pages.
+- Provide descriptive alt text for product screenshots and labels for silent video.
 
-## Do's and Don'ts
+## Banned patterns
 
-Do:
+- No blue footer or large blue brand wash; use Vibe Coral for the footer instead.
+- No purple/blue AI gradients or neon glow.
+- No noisy, grainy, shader-based, or animated-texture buttons.
+- No numbered card grids or three equal feature cards.
+- No decorative hover lift on static containers.
+- No recurring italic-serif plus generic-sans pairing.
+- No default centered, perfectly symmetric page composition.
+- No placeholder navigation links.
+- No generic AI illustrations when product media exists.
+- No open-source-first or AI-architecture-generator-first marketing position.
+- No emojis, fake metrics, or AI copywriting clichés.
 
-- Use Inter and Instrument Serif exactly as defined in the Next font setup.
-- Keep the warm gray canvas visible around large content slabs.
-- Use oversized type with tight tracking for key statements.
-- Use inline media, logo tickers, and small motion loops to make documentation feel alive.
-- Use one global accent only: Live Green (#0CB300).
-- Keep interactive targets at least 44px tall.
-- Preserve readable contrast over shader, grain, and moving-media backgrounds.
-- Use real product language about repositories, maintainers, diagrams, APIs, README files, and architecture.
+## Decision rule
 
-Don't:
-
-- Do not add purple/blue AI gradients, neon glows, or "magic sparkle" aesthetics.
-- Do not use pure black as a design token; use Charcoal Ink or Footer Black.
-- Do not add generic SaaS 3-card feature rows unless layout variance is introduced.
-- Do not overlap text and imagery. Inline media can sit between words, but every element needs its own spatial zone.
-- Do not use emojis in product UI.
-- Do not use generic placeholder brands such as Acme, John Doe, or Startup Inc.
-- Do not use fake metrics like 99.99%, 10x, or 50% unless backed by real product data.
-- Do not use AI-copy cliches such as "elevate", "unleash", "seamless", "revolutionary", or "next-gen".
-- Do not introduce circular loading spinners. Use skeleton shapes matching the final layout.
-- Do not allow decorative animations to affect layout or cause content shifts.
+When choosing between two directions, choose the one that makes a visitor understand and want to create a **Vibe Diagram** sooner. If an element communicates implementation credentials but weakens the Vibe Diagram story, move it to a supporting page or remove it.

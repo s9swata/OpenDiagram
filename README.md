@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="apps/web/public/logo_opendiagram.png" alt="OpenDiagram logo" width="96" />
+  <img src="apps/web/public/new_logo.png" alt="OpenDiagram logo" width="96" />
 
 # OpenDiagram
 
