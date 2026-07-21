@@ -41,11 +41,45 @@ import {
 } from "@/components/ai-elements/prompt-input";
 import type { PromptInputMessage } from "@/components/ai-elements/prompt-input";
 
+type StoredAskUserCall =
+  | {
+      toolCallId: string;
+      state: "input-available";
+      input: AskUserInput;
+    }
+  | {
+      toolCallId: string;
+      state: "output-available";
+      input: AskUserInput;
+      output: string;
+    };
+
 interface ChatMessage {
   id: string;
   role: "user" | "assistant";
   text: string;
   channel: "diagram" | "project";
+  askUserCalls?: StoredAskUserCall[];
+}
+
+function isAskUserInput(value: unknown): value is AskUserInput {
+  if (!value || typeof value !== "object") return false;
+  const input = value as Partial<AskUserInput>;
+  return (
+    typeof input.question === "string" &&
+    Array.isArray(input.options) &&
+    input.options.every((option) => typeof option === "string")
+  );
+}
+
+function isStoredAskUserCall(value: unknown): value is StoredAskUserCall {
+  if (!value || typeof value !== "object") return false;
+  const call = value as Partial<StoredAskUserCall>;
+  if (typeof call.toolCallId !== "string" || !isAskUserInput(call.input)) return false;
+  return (
+    call.state === "input-available" ||
+    (call.state === "output-available" && typeof call.output === "string")
+  );
 }
 
 function isChatMessage(value: unknown): value is Omit<ChatMessage, "channel"> & {
@@ -59,7 +93,9 @@ function isChatMessage(value: unknown): value is Omit<ChatMessage, "channel"> & 
     typeof message.text === "string" &&
     (message.channel === undefined ||
       message.channel === "diagram" ||
-      message.channel === "project")
+      message.channel === "project") &&
+    (message.askUserCalls === undefined ||
+      (Array.isArray(message.askUserCalls) && message.askUserCalls.every(isStoredAskUserCall)))
   );
 }
 
@@ -79,14 +115,60 @@ function uiMessageToChatMessage(
 ): ChatMessage | null {
   if (message.role !== "user" && message.role !== "assistant") return null;
   const text = uiMessageText(message);
-  return text ? { id: message.id, role: message.role, text, channel } : null;
+  const askUserCalls = message.parts.flatMap((part): StoredAskUserCall[] => {
+    if (part.type !== "tool-ask_user" || !isAskUserInput(part.input)) return [];
+    if (part.state === "input-available") {
+      return [{ toolCallId: part.toolCallId, state: part.state, input: part.input }];
+    }
+    if (part.state === "output-available" && typeof part.output === "string") {
+      return [
+        {
+          toolCallId: part.toolCallId,
+          state: part.state,
+          input: part.input,
+          output: part.output,
+        },
+      ];
+    }
+    return [];
+  });
+
+  return text || askUserCalls.length > 0
+    ? {
+        id: message.id,
+        role: message.role,
+        text,
+        channel,
+        ...(askUserCalls.length > 0 ? { askUserCalls } : {}),
+      }
+    : null;
 }
 
 function chatMessageToUIMessage(message: ChatMessage): UIMessage {
+  const parts: UIMessage["parts"] = message.text ? [{ type: "text", text: message.text }] : [];
+  for (const call of message.askUserCalls ?? []) {
+    parts.push(
+      call.state === "input-available"
+        ? {
+            type: "tool-ask_user",
+            toolCallId: call.toolCallId,
+            state: call.state,
+            input: call.input,
+          }
+        : {
+            type: "tool-ask_user",
+            toolCallId: call.toolCallId,
+            state: call.state,
+            input: call.input,
+            output: call.output,
+          },
+    );
+  }
+
   return {
     id: message.id,
     role: message.role,
-    parts: [{ type: "text", text: message.text }],
+    parts,
   };
 }
 
