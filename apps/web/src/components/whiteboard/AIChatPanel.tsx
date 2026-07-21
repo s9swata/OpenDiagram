@@ -45,6 +45,81 @@ interface ChatMessage {
   id: string;
   role: "user" | "assistant";
   text: string;
+  channel: "diagram" | "project";
+}
+
+function isChatMessage(value: unknown): value is Omit<ChatMessage, "channel"> & {
+  channel?: ChatMessage["channel"];
+} {
+  if (!value || typeof value !== "object") return false;
+  const message = value as Partial<ChatMessage>;
+  return (
+    typeof message.id === "string" &&
+    (message.role === "user" || message.role === "assistant") &&
+    typeof message.text === "string" &&
+    (message.channel === undefined ||
+      message.channel === "diagram" ||
+      message.channel === "project")
+  );
+}
+
+function uiMessageText(message: UIMessage) {
+  return message.parts
+    .filter(
+      (part): part is Extract<UIMessage["parts"][number], { type: "text" }> => part.type === "text",
+    )
+    .map((part) => part.text)
+    .join("")
+    .trim();
+}
+
+function uiMessageToChatMessage(
+  message: UIMessage,
+  channel: ChatMessage["channel"],
+): ChatMessage | null {
+  if (message.role !== "user" && message.role !== "assistant") return null;
+  const text = uiMessageText(message);
+  return text ? { id: message.id, role: message.role, text, channel } : null;
+}
+
+function chatMessageToUIMessage(message: ChatMessage): UIMessage {
+  return {
+    id: message.id,
+    role: message.role,
+    parts: [{ type: "text", text: message.text }],
+  };
+}
+
+function normalizeHistory(history: unknown[] | undefined, fileType?: "diagram" | "doc") {
+  return (history ?? []).flatMap((entry) => {
+    if (isChatMessage(entry)) {
+      const legacyChannel =
+        fileType === "diagram" && !entry.id.startsWith("msg-") ? "diagram" : "project";
+      return [{ ...entry, channel: entry.channel ?? legacyChannel }];
+    }
+
+    if (
+      entry &&
+      typeof entry === "object" &&
+      "parts" in entry &&
+      Array.isArray((entry as UIMessage).parts)
+    ) {
+      const message = uiMessageToChatMessage(
+        entry as UIMessage,
+        fileType === "diagram" ? "diagram" : "project",
+      );
+      return message ? [message] : [];
+    }
+
+    return [];
+  });
+}
+
+function uiMessagesToChatHistory(messages: UIMessage[]) {
+  return messages.flatMap((message) => {
+    const chatMessage = uiMessageToChatMessage(message, "diagram");
+    return chatMessage ? [chatMessage] : [];
+  });
 }
 
 /** Mirror of the server's draw_diagram tool output (apps/server lib/agent/tools.ts). */
@@ -60,10 +135,12 @@ interface AskUserInput {
 }
 
 interface AIChatPanelProps {
+  activeFileType?: "diagram" | "doc";
   excalidrawAPI: ExcalidrawImperativeAPI | null;
   projectId?: string;
   fileId?: string;
-  initialHistory?: ChatMessage[];
+  initialHistory?: unknown[];
+  initialSpec?: DiagramSpec;
   repoGenerationJob?: RepoGenerationJob | null;
   repoGenerationError?: string | null;
   onQuotaError?: (message: string) => void;
@@ -135,22 +212,33 @@ function diagramRequestLikely(text: string) {
 }
 
 export function AIChatPanel({
+  activeFileType,
   excalidrawAPI,
   projectId,
   fileId,
   initialHistory,
+  initialSpec,
   repoGenerationJob,
   repoGenerationError,
   onQuotaError,
 }: AIChatPanelProps) {
-  const currentSpecRef = useRef<DiagramSpec | undefined>(undefined);
+  const normalizedHistory = normalizeHistory(initialHistory, activeFileType);
+  const initialProjectMessages = normalizedHistory.filter(
+    (message) => message.channel === "project",
+  );
+  const initialDiagramHistory = normalizedHistory.filter(
+    (message) => message.channel === "diagram",
+  );
+  const currentSpecRef = useRef<DiagramSpec | undefined>(initialSpec);
   const frameByTitleRef = useRef(new Map<string, string>());
   const appliedToolCallsRef = useRef(new Set<string>());
   // Serializes canvas applies: each one reads and rewrites the whole scene, so
   // two in flight at once would clobber each other's elements.
   const applyChainRef = useRef<Promise<void>>(Promise.resolve());
-  const messageIdRef = useRef(initialHistory?.length ?? 0);
-  const [projectMessages, setProjectMessages] = useState<ChatMessage[]>(initialHistory ?? []);
+  const messageIdRef = useRef(normalizedHistory.length);
+  const projectHistoryRef = useRef(initialProjectMessages);
+  const diagramHistoryRef = useRef(initialDiagramHistory);
+  const [projectMessages, setProjectMessages] = useState<ChatMessage[]>(initialProjectMessages);
   const [projectStatus, setProjectStatus] = useState<ChatStatus>("ready");
   const [projectError, setProjectError] = useState<string | null>(null);
   const [themeName, setThemeName] = useState<ThemeName>("sketch");
@@ -159,6 +247,16 @@ export function AIChatPanel({
   themeRef.current = themeName;
   const [applyError, setApplyError] = useState<string | null>(null);
 
+  const persistAgentFile = useCallback(
+    (update: { history?: ChatMessage[]; spec?: DiagramSpec }) => {
+      if (!projectId || !fileId) return;
+      void updateProjectFile(projectId, fileId, update).catch(() => {
+        setProjectError("The agent response completed, but its context could not be saved.");
+      });
+    },
+    [fileId, projectId],
+  );
+
   const {
     messages: diagramMessages,
     sendMessage,
@@ -166,12 +264,18 @@ export function AIChatPanel({
     status: diagramStatus,
     error: diagramError,
   } = useChat({
+    messages: initialDiagramHistory.map(chatMessageToUIMessage),
     transport: new DefaultChatTransport({
       api: `${env.NEXT_PUBLIC_SERVER_URL}/api/diagram/chat`,
       body: () => ({ currentSpec: currentSpecRef.current, theme: themeRef.current }),
       fetch: fetchDiagramChat,
     }),
     sendAutomaticallyWhen: lastAssistantMessageIsCompleteWithToolCalls,
+    onFinish: ({ messages }) => {
+      const diagramHistory = uiMessagesToChatHistory(messages);
+      diagramHistoryRef.current = diagramHistory;
+      persistAgentFile({ history: [...projectHistoryRef.current, ...diagramHistory] });
+    },
   });
 
   useEffect(() => {
@@ -203,6 +307,7 @@ export function AIChatPanel({
           })
             .then(({ frameId }) => {
               if (frameId) frameByTitleRef.current.set(spec.title, frameId);
+              persistAgentFile({ spec });
             })
             .catch((err: unknown) => {
               // Un-mark so the next messages update can retry after a
@@ -213,7 +318,7 @@ export function AIChatPanel({
         );
       }
     }
-  }, [diagramMessages, excalidrawAPI]);
+  }, [diagramMessages, excalidrawAPI, persistAgentFile]);
 
   const answerAskUser = useCallback(
     (toolCallId: string, answer: string) => {
@@ -230,6 +335,7 @@ export function AIChatPanel({
         id: `msg-${messageIdRef.current++}`,
         role: "user",
         text,
+        channel: "project",
       };
       setProjectMessages((prev) => [...prev, userMessage]);
       setProjectStatus("submitted");
@@ -244,14 +350,12 @@ export function AIChatPanel({
               id: `msg-${messageIdRef.current++}`,
               role: "assistant" as const,
               text: result.message,
+              channel: "project" as const,
             },
           ];
 
-          if (fileId) {
-            window.setTimeout(() => {
-              void updateProjectFile(projectId, fileId, { history: updated });
-            }, 0);
-          }
+          projectHistoryRef.current = updated;
+          persistAgentFile({ history: [...updated, ...diagramHistoryRef.current] });
 
           return updated;
         });
@@ -261,7 +365,12 @@ export function AIChatPanel({
         if (err instanceof CreationQuotaError) onQuotaError?.(message);
         setProjectMessages((prev) => [
           ...prev,
-          { id: `msg-${messageIdRef.current++}`, role: "assistant", text: `Error: ${message}` },
+          {
+            id: `msg-${messageIdRef.current++}`,
+            role: "assistant",
+            text: `Error: ${message}`,
+            channel: "project",
+          },
         ]);
         setProjectError(message);
         setProjectStatus("ready");
@@ -269,7 +378,7 @@ export function AIChatPanel({
 
       return true;
     },
-    [fileId, onQuotaError, projectId],
+    [onQuotaError, persistAgentFile, projectId],
   );
 
   const handleSubmit = useCallback(
@@ -279,6 +388,7 @@ export function AIChatPanel({
       if (!text || (status !== "ready" && status !== "error")) return;
 
       setApplyError(null);
+      setProjectError(null);
       const pending = pendingAskUser(diagramMessages);
       if (pending) {
         answerAskUser(pending.toolCallId, text);
