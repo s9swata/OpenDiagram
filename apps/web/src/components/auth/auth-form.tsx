@@ -3,7 +3,7 @@
 import { useState, useMemo, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { authClient } from "@/lib/auth-client";
+import { authClient, frontendCallbackURL } from "@/lib/auth-client";
 import { IconMail, IconCheck, IconArrowRight, IconBrandGithubFilled } from "@tabler/icons-react";
 import { Field, PasswordInput, scoreStrength, VisualPane, Checkbox } from "./auth-components";
 
@@ -109,7 +109,13 @@ export function AuthForm({ initialTab }: { initialTab: "signin" | "signup" }) {
           { email: suEmail, password: suPwd, name: `${suFirst} ${suLast}`.trim() },
           {
             onRequest: () => setLoading(true),
-            onSuccess: () => setSuccess(true),
+            onSuccess: () => {
+              setSuccess(true);
+              setTimeout(() => {
+                router.push("/dashboard");
+                router.refresh();
+              }, 500);
+            },
             onError: (ctx) => {
               setLoading(false);
               alert(ctx.error.message || "Failed to create account");
@@ -146,11 +152,7 @@ export function AuthForm({ initialTab }: { initialTab: "signin" | "signup" }) {
                 <IconCheck width={28} height={28} />
               </div>
               <h2>{tab === "signin" ? "Welcome back" : "You're in"}</h2>
-              <p>
-                {tab === "signin"
-                  ? "Redirecting to your dashboard…"
-                  : "Check your inbox to verify your email."}
-              </p>
+              <p>Redirecting to your dashboard…</p>
             </div>
           ) : (
             <>
@@ -333,7 +335,10 @@ export function AuthForm({ initialTab }: { initialTab: "signin" | "signup" }) {
                 className="btn btn-github"
                 type="button"
                 onClick={() =>
-                  authClient.signIn.social({ provider: "github", callbackURL: "/dashboard" })
+                  authClient.signIn.social({
+                    provider: "github",
+                    callbackURL: frontendCallbackURL("/dashboard"),
+                  })
                 }
               >
                 <IconBrandGithubFilled size={16} />

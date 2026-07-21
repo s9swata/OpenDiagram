@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import type { DiagramSpec } from "@OpenDiagram/harness";
 import {
   Dialog,
   DialogContent,
@@ -18,9 +19,13 @@ import { useWorkspaceLayoutController } from "./workspace-layout/useWorkspaceLay
 export function WorkspaceLayout() {
   const { state, actions } = useWorkspaceLayoutController();
   const [quotaMessage, setQuotaMessage] = useState<string | null>(null);
-  const activeHistory = state.activeFile?.history as
-    | { id: string; role: "user" | "assistant"; text: string }[]
-    | undefined;
+  const activeHistory = state.activeFile?.history;
+  const activeDiagramSpec =
+    state.activeFile?.type === "diagram" &&
+    state.activeFile.spec &&
+    typeof state.activeFile.spec === "object"
+      ? (state.activeFile.spec as DiagramSpec)
+      : undefined;
   const agentProjectId = state.isSignedIn ? state.activeFile?.projectId : undefined;
   const agentFileId = state.activeFile?.id ?? state.currentFileId ?? undefined;
 
@@ -77,6 +82,7 @@ export function WorkspaceLayout() {
           excalidrawAPI={state.excalidrawAPI}
           fileId={agentFileId}
           initialHistory={activeHistory}
+          initialSpec={activeDiagramSpec}
           onClose={actions.closeAgent}
           onQuotaError={setQuotaMessage}
           onResizeStart={actions.handleResizeStart}

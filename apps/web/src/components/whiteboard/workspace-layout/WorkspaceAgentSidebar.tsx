@@ -1,4 +1,5 @@
 import type { ExcalidrawImperativeAPI } from "@excalidraw/excalidraw/types";
+import type { DiagramSpec } from "@OpenDiagram/harness";
 import { PanelRightClose } from "lucide-react";
 import type { RepoGenerationJob } from "@/lib/projects-client";
 import { AIChatPanel } from "../AIChatPanel";
@@ -9,7 +10,8 @@ type WorkspaceAgentSidebarProps = {
   agentWidth: number;
   excalidrawAPI: ExcalidrawImperativeAPI | null;
   fileId?: string;
-  initialHistory?: { id: string; role: "user" | "assistant"; text: string }[];
+  initialHistory?: unknown[];
+  initialSpec?: DiagramSpec;
   projectId?: string;
   repoGenerationError: string | null;
   repoGenerationJob: RepoGenerationJob | null;
@@ -19,11 +21,13 @@ type WorkspaceAgentSidebarProps = {
 };
 
 export function WorkspaceAgentSidebar({
+  activeFileId,
   activeFileType,
   agentWidth,
   excalidrawAPI,
   fileId,
   initialHistory,
+  initialSpec,
   projectId,
   repoGenerationError,
   repoGenerationJob,
@@ -54,10 +58,13 @@ export function WorkspaceAgentSidebar({
         </button>
       </div>
       <AIChatPanel
+        key={activeFileId ?? fileId}
+        activeFileType={activeFileType}
         excalidrawAPI={activeFileType === "doc" ? null : excalidrawAPI}
         projectId={projectId}
         fileId={fileId}
         initialHistory={initialHistory}
+        initialSpec={initialSpec}
         repoGenerationJob={repoGenerationJob}
         repoGenerationError={repoGenerationError}
         onQuotaError={onQuotaError}
